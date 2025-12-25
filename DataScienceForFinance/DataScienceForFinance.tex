@@ -1,0 +1,5130 @@
+\documentclass[UTF8, a4paper, 12pt]{ctexart}
+
+% --- 核心宏包 ---
+\usepackage{geometry}
+\geometry{a4paper, margin=25.4mm} 
+\usepackage{amsmath, amssymb}
+\usepackage{amsfonts}
+\usepackage{xcolor} 
+\usepackage{listings}
+
+% --- 提示框 ---
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{breakable}
+
+% --- 全局排版设置 ---
+\setlength{\parindent}{0pt} 
+\setlength{\parskip}{0.5em}
+
+% 定义代码高亮样式
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    commentstyle=\color{green!60!black},
+    backgroundcolor=\color{blue!5}, 
+    frame=single,
+    rulecolor=\color{gray!30},
+    breaklines=true,
+    showstringspaces=false,
+    xleftmargin=10pt,
+    xrightmargin=10pt,
+    aboveskip=10pt,
+    belowskip=10pt
+}
+
+\begin{document}
+
+
+
+\begin{enumerate}
+
+% ==================================================
+% Question 1: Default Parameters in Functions
+% ==================================================
+\item What is the output of the following code? \textbf{C} 
+\begin{lstlisting}
+def calculate (num1, num2=4):
+    res = num1 * num2
+    print(res)
+
+calculate(5, 6)
+\end{lstlisting}
+A. 20 \quad B. The program executed with errors \quad C. 30 
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!50!black, title=详细解答]
+这道题的考察 \textbf{默认参数}与\textbf{传入参数}的优先级问题。
+
+\begin{itemize}
+    \item \textbf{参数定义}：在 \texttt{def calculate(num1, num2=4)} 中，\texttt{num2} 被赋予了默认值 $4$。
+    \item \textbf{函数调用}：代码执行了 \texttt{calculate(5, 6)}。
+    \item \textbf{覆盖机制}：虽然 \texttt{num2} 有默认值，但由于我们在调用时传入了第二个参数 \texttt{6}，这个新的值会\textbf{覆盖}掉原来的默认值 $4$。
+\end{itemize}
+
+\tcbline
+
+\textbf{计算步骤：}
+\begin{enumerate}
+    \item 赋值：\texttt{num1 = 5}, \texttt{num2 = 6}
+    \item 计算：$res = 5 \times 6$
+    \item 输出：$30$
+\end{enumerate}
+
+如果调用 \texttt{calculate(5)} ，结果是 $20$。
+\end{tcolorbox}
+
+% ==================================================
+% Question 2: Local vs Global Variables
+% ==================================================
+\item What is the output of the following code: \textbf{A} 
+\begin{lstlisting}
+salary = 8000
+
+def printSalary():
+    salary = 12000
+    print("Salary:", salary)
+
+printSalary()
+\end{lstlisting}
+A. Salary: 12000 \quad B. Salary: 8000 \quad C. The program failed with errors 
+
+\begin{tcolorbox}[colback=purple!5!white, colframe=purple!50!black, title=详细解答]
+这道题考察的是 \textbf{局部变量} 与 \textbf{全局变量} 的区别。
+
+\begin{itemize}
+    \item \textbf{全局变量}：在函数外部定义的 \texttt{salary = 8000} 是全局变量，它在整个脚本范围内有效。
+    \item \textbf{局部变量}：在函数 \texttt{printSalary()} 内部定义的 \texttt{salary = 12000} 是一个局部变量。
+    \item \textbf{覆盖}：当函数内部存在与全局变量同名的变量时，函数会优先使用自己的局部变量。
+\end{itemize}
+
+\tcbline
+
+\textbf{执行流程：}
+\begin{enumerate}
+    \item 程序首先在全局空间定义 \texttt{salary = 8000}。
+    \item 调用 \texttt{printSalary()} 函数。
+    \item 在函数内部，重新创建了一个局部变量 \texttt{salary} 并赋值为 \texttt{12000}。
+    \item \texttt{print} 语句执行时，查找当前作用域，发现了局部变量 \texttt{12000}，因此将其打印。
+\end{enumerate}
+
+\textbf{结论：} 函数内部的修改不会影响外部全局变量的值（除非使用 \texttt{global} 关键字），但打印动作发生在内部，所以输出为 \textbf{Salary: 12000}。
+\end{tcolorbox}
+
+
+% ==================================================
+% Question 3: String Slicing
+% ==================================================
+\item What is the output of the following code? \textbf{B}
+\begin{lstlisting}
+str = "Beijing University of Technolgy"
+print (str[1:3])
+\end{lstlisting}
+A. Be \quad B. ei \quad C. Bei \quad D. eij 
+
+\begin{tcolorbox}[enhanced, colback=yellow!5!white, colframe=yellow!60!black, title=详细解答, breakable]
+这道题考察的是 Python 的 \textbf{切片}语法：\texttt{string[start:end]}。
+
+\begin{itemize}
+    \item \textbf{索引从0开始}：Python 字符串的第一个字符索引是 $0$。
+    \begin{itemize}
+        \item 索引 \texttt{0}: \texttt{'B'}
+        \item 索引 \texttt{1}: \texttt{'e'}
+        \item 索引 \texttt{2}: \texttt{'i'}
+        \item 索引 \texttt{3}: \texttt{'j'}
+    \end{itemize}
+    \item \textbf{左闭右开原则}：切片操作包含 \texttt{start} 索引处的字符，但\textbf{不包含} \texttt{end} 索引处的字符。
+    \item \textbf{计算区间}：\texttt{[1:3]} 表示从索引 $1$ 开始，取到索引 $3$ 之前（即只取索引 $1$ 和 $2$）。
+\end{itemize}
+
+\tcbline
+
+\textbf{执行流程：}
+\begin{enumerate}
+    \item 找到 \texttt{str[1]}，对应字母为 \texttt{'e'}。
+    \item 找到 \texttt{str[2]}，对应字母为 \texttt{'i'}。
+    \item 停止于 \texttt{str[3]} 之前，不包含 \texttt{'j'}。
+\end{enumerate}
+
+\textbf{结论：} 组合结果为 \texttt{"ei"}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 4: Multiple Variable Assignment
+% ==================================================
+\item What is the output of the following code? \textbf{B} 
+\begin{lstlisting}
+p, q, r = 10, 20, 30
+print(p, q, r)
+\end{lstlisting}
+A. 10 20 \quad B. 10 20 30 \quad C. Error: invalid syntax 
+
+\begin{tcolorbox}[enhanced, colback=gray!5!white, colframe=gray!60!black, title=详细解答, breakable]
+Python 的\textbf{多重赋值} 功能。
+
+\begin{itemize}
+    \item \textbf{语法逻辑}：Python 允许在一行代码中为多个变量赋值。等号左边的变量名与等号右边的值按\textbf{位置顺序}一一对应。
+    \item \textbf{对应关系}：
+    \begin{itemize}
+        \item \texttt{p} 对应第一个值 $10$
+        \item \texttt{q} 对应第二个值 $20$
+        \item \texttt{r} 对应第三个值 $30$
+    \end{itemize}
+    \item \textbf{打印输出}：\texttt{print(p, q, r)} 会依次打印这三个变量，默认以空格分隔。
+\end{itemize}
+
+\tcbline
+
+\textbf{关键规则：}
+等号左右两边的元素数量必须\textbf{严格相等}。
+\begin{itemize}
+    \item 如果写成 \texttt{p, q = 10, 20, 30}，程序会抛出 \texttt{ValueError}（太多值无法解包）。
+    \item 如果写成 \texttt{p, q, r = 10, 20}，程序会抛出 \texttt{ValueError}（值不够，无法解包）。
+\end{itemize}
+
+\textbf{结论：} 变量与数值数量匹配，赋值成功。输出为 \textbf{10 20 30}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 5: Operator Precedence and Float Division
+% ==================================================
+\item What is the output of the following code? \textbf{A}
+\begin{lstlisting}
+x = 36 / 4 * (3 + 2) * 4 + 2
+print(x)
+\end{lstlisting}
+A. 182.0 \quad B. 37 \quad C. 117 \quad D. The program executed with errors
+
+\begin{tcolorbox}[enhanced, colback=blue!5!white, colframe=blue!60!black, title=详细解答, breakable]
+\textbf{运算符优先级} 和 \textbf{Python 3 的除法机制}。
+
+\begin{itemize}
+    \item \textbf{优先级顺序}：括号 () $\rightarrow$ 乘除 (* /) $\rightarrow$ 加法 (+)。
+    \item \textbf{同级运算}：乘法和除法处于同一优先级，按照\textbf{从左到右}的顺序执行。
+    \item \textbf{浮点数结果}：在 Python 3 中，使用单个斜杠 \texttt{/} 进行除法运算，其结果总是 \textbf{float (浮点数)}，即使能整除也不例外。
+\end{itemize}
+
+\tcbline
+
+\textbf{逐步计算过程：}
+\begin{enumerate}
+    \item \textbf{处理括号}：\texttt{(3 + 2) = 5}
+    \item \textbf{从左到右计算乘除}：
+    \begin{itemize}
+        \item \texttt{36 / 4 = 9.0} （注意：此处产生浮点数）
+        \item \texttt{9.0 * 5 = 45.0}
+        \item \texttt{45.0 * 4 = 180.0}
+    \end{itemize}
+    \item \textbf{最后计算加法}：\texttt{180.0 + 2 = 182.0}
+\end{enumerate}
+
+\textbf{结论：} 因为除法操作的存在，结果必须带有小数点。故正确答案是 \textbf{182.0}。
+\end{tcolorbox}
+
+
+% ==================================================
+% Question 6: range() Function and end Parameter
+% ==================================================
+\item What is the output of the following code? \textbf{A}
+\begin{lstlisting}
+for i in range(10, 15, 1):
+    print(i, end=', ')
+\end{lstlisting}
+A. 10, 11, 12, 13, 14, \quad B. 10, 11, 12, 13, 14, 15
+
+\begin{tcolorbox}[enhanced, breakable, colback=purple!5!white, colframe=purple!50!black, title=详细解答]
+Python 的 \texttt{range()} 函数参数以及 \texttt{print()} 函数的 \texttt{end} 参数。
+
+\begin{itemize}
+    \item \textbf{range(start, stop, step)}：
+    \begin{itemize}
+        \item \texttt{start = 10}：计数从 $10$ 开始（包含）。
+        \item \texttt{stop = 15}：计数到 $15$ 结束（\textbf{不包含}）。这是 Python 典型的“左闭右开”原则。
+        \item \texttt{step = 1}：步长为 $1$，即每次递增 $1$。
+    \end{itemize}
+    \item \textbf{print(..., end=', ')}：
+    \begin{itemize}
+        \item 默认情况下，\texttt{print} 会在输出后换行。
+        \item 使用 \texttt{end=', '} 后，每次打印结束后不再换行，而是追加一个逗号和一个空格。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{执行流程：}
+\begin{enumerate}
+    \item 第一轮：$i=10$，打印 \texttt{10, }
+    \item 第二轮：$i=11$，打印 \texttt{11, }
+    \item 第三轮：$i=12$，打印 \texttt{12, }
+    \item 第四轮：$i=13$，打印 \texttt{13, }
+    \item 第五轮：$i=14$，打印 \texttt{14, }
+    \item 达到 \texttt{stop} 值 $15$，循环结束。
+\end{enumerate}
+
+\textbf{结论：} 循环生成的序列是 $10, 11, 12, 13, 14$，末尾均带有指定的格式。
+\end{tcolorbox}
+
+% ==================================================
+% Question 7: List Equality (==)
+% ==================================================
+\item What is the output of the following code? \textbf{A}
+\begin{lstlisting}
+listOne = [20, 40, 60, 80]
+listTwo = [20, 40, 60, 80]
+
+print(listOne == listTwo)
+\end{lstlisting}
+A. True \quad B. False
+
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!50!black, title=详细解答, enhanced, breakable]
+\textbf{相等运算符 (Equality Operator)} \texttt{==} 的工作原理。
+
+\begin{itemize}
+    \item \textbf{内容比较 (\texttt{==})}：在 Python 中，\texttt{==} 运算符用于比较两个对象的\textbf{值（内容）}是否相等。对于列表而言，如果两个列表包含相同顺序、相同数量且值相等的元素，则结果为 \texttt{True}。
+    \item \textbf{对象标识 (\texttt{is})}：需要注意的是，如果是使用 \texttt{listOne is listTwo} 比较，结果将是 \texttt{False}，因为 \texttt{is} 比较的是它们是否为内存中的同一个对象（即 ID 是否相同）。
+\end{itemize}
+
+\tcbline
+
+\textbf{代码分析：}
+\begin{enumerate}
+    \item \texttt{listOne} 的值为 \texttt{[20, 40, 60, 80]}。
+    \item \texttt{listTwo} 的值为 \texttt{[20, 40, 60, 80]}。
+    \item 两个列表的元素及其排列顺序完全一致。
+\end{enumerate}
+
+
+
+\textbf{结论：} 
+由于 \texttt{listOne} 和 \texttt{listTwo} 的内容完全相同，表达式 \texttt{listOne == listTwo} 返回 \textbf{True}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 8: Object Identity (is)
+% ==================================================
+\item What is the output of the following code? \textbf{B}
+\begin{lstlisting}
+listOne = [20, 40, 60, 80]
+listTwo = [20, 40, 60, 80]
+
+print(listOne is listTwo)
+\end{lstlisting}
+A. True \quad B. False
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!50!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{身份运算符 (Identity Operator)} \texttt{is} 与相等运算符 \texttt{==} 的本质区别。
+
+\begin{itemize}
+    \item \textbf{== (Equality)}：比较的是两个对象的\textbf{值}是否相等（Content）。
+    \item \textbf{is (Identity)}：比较的是两个对象是否指向\textbf{内存中的同一个地址}（Object Identity/Memory Address）。
+\end{itemize}
+
+\tcbline
+
+\textbf{代码分析：}
+\begin{enumerate}
+    \item \texttt{listOne = [20, 40, 60, 80]}：Python 在内存中创建了一个新的列表对象。
+    \item \texttt{listTwo = [20, 40, 60, 80]}：Python \textbf{又}创建了一个新的列表对象。虽然内容一样，但它们是两个独立的容器。
+    \item \texttt{listOne is listTwo}：系统会检查 \texttt{id(listOne)} 是否等于 \texttt{id(listTwo)}。
+\end{enumerate}
+
+
+
+\textbf{核心结论：} 
+尽管两个列表的内容完全一致，但它们存储在内存的不同位置。由于它们是两个不同的对象，\texttt{is} 的结果为 \textbf{False}。
+
+\tcbline
+
+\textbf{延伸思考：}
+如果执行 \texttt{listThree = listOne}，然后再比较 \texttt{listOne is listThree}，结果才会是 \texttt{True}，因为此时两个变量指向了同一个内存地址。
+\end{tcolorbox}
+
+% ==================================================
+% Question 9: String Multiplication
+% ==================================================
+\item What is the output of the following code? \textbf{A}
+\begin{lstlisting}
+var = "James" * 2 * 3
+print(var)
+\end{lstlisting}
+A. JamesJamesJamesJamesJamesJames \\
+B. JamesJamesJamesJamesJames \\
+C. Error: invalid syntax
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!50!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{字符串乘法 (String Replication)} 运算符。
+
+\begin{itemize}
+    \item \textbf{乘法运算符 \texttt{*}}：当乘法运算符用于字符串和整数之间时，它表示将该字符串重复指定的次数。
+    \item \textbf{结合性}：乘法运算在 Python 中具有\textbf{左结合性}，即从左向右依次计算。
+\end{itemize}
+
+\tcbline
+
+\textbf{执行流程分析：}
+\begin{enumerate}
+    \item \textbf{第一步}：计算 \texttt{"James" * 2}。
+    \begin{itemize}
+        \item 结果为 \texttt{"JamesJames"} (重复 2 次)。
+    \end{itemize}
+    \item \textbf{第二步}：计算 \texttt{"JamesJames" * 3}。
+    \begin{itemize}
+        \item 将上一步得到的字符串再重复 3 次。
+        \item 相当于总共重复了 $2 \times 3 = 6$ 次。
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+最终变量 \texttt{var} 存储的是连续 6 个 "James"。
+\texttt{"James" + "James" + "James" + "James" + "James" + "James"}
+故正确答案是 \textbf{A}。
+
+\tcbline
+
+\textbf{注意：} 字符串只能与\textbf{整数}相乘。如果尝试 \texttt{"James" * "Bond"}，程序会抛出 \texttt{TypeError}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 10: Exponentiation Operator
+% ==================================================
+\item What is the output of the following code? \textbf{C}
+\begin{lstlisting}
+valueOne = 5 ** 2
+print(valueOne)
+\end{lstlisting}
+A. Error: invalid syntax \quad B. 15 \quad C. 25 \quad D. 125
+
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!50!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{幂运算符 (Exponentiation Operator)}。
+
+\begin{itemize}
+    \item \textbf{算术运算符 \texttt{**}}：在 Python 中，双星号 \texttt{**} 代表幂运算，即计算左操作数的右操作数次幂（$x^y$）。
+    \item \textbf{区别于其他语言}：在某些编程语言（如 C++ 或 Java）中，计算方幂通常需要调用 \texttt{pow()} 函数或使用 \texttt{\^}（注意：在 Python 中 \texttt{\^} 是位运算符异或 XOR）。
+\end{itemize}
+
+\tcbline
+
+\textbf{计算过程：}
+\begin{enumerate}
+    \item 表达式为 \texttt{5 ** 2}。
+    \item 对应数学公式：$5^2 = 5 \times 5$。
+    \item 计算结果为 $25$。
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{知识拓展：}
+\begin{itemize}
+    \item \textbf{浮点数幂运算}：如果底数或指数是浮点数，结果也会是浮点数。例如 \texttt{5 ** 2.0} 结果为 \texttt{25.0}。
+    \item \textbf{开方运算}：你也可以使用 \texttt{**} 进行开方，例如 \texttt{25 ** 0.5} 结果为 \texttt{5.0}。
+\end{itemize}
+
+\textbf{结论：} 
+计算结果为整型数字 $25$。
+\end{tcolorbox}
+
+% ==================================================
+% Question 11: Type Error (int + str)
+% ==================================================
+\item What is the output of the following code? \textbf{D}
+\begin{lstlisting}
+var1 = 1
+var2 = 2
+var3 = "3"
+
+print(var1 + var2 + var3)
+\end{lstlisting}
+A. 6 \quad B. 33 \quad C. 123 \quad D. Error. Mixing operators between numbers and strings are not supported
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 的 \textbf{强类型特性 (Strong Typing)} 以及加法运算符 \texttt{+} 在不同数据类型间的行为。
+
+\begin{itemize}
+    \item \textbf{数据类型识别}：
+    \begin{itemize}
+        \item \texttt{var1} 和 \texttt{var2} 是 \textbf{整型 (int)}。
+        \item \texttt{var3} 是 \textbf{字符串 (str)}，因为它被包裹在引号中。
+    \end{itemize}
+    \item \textbf{运算顺序}：
+    \begin{enumerate}
+        \item 首先执行 \texttt{var1 + var2}，即 $1 + 2$，结果为整型 $3$。
+        \item 接着尝试执行 \texttt{3 + var3}，即 \texttt{3 + "3"}。
+    \end{enumerate}
+\end{itemize}
+
+\tcbline
+
+\textbf{为什么会报错？}
+Python 不允许直接将 \textbf{整型 (int)} 和 \textbf{字符串 (str)} 使用 \texttt{+} 号相加：
+\begin{itemize}
+    \item 对于数字，\texttt{+} 代表算术加法。
+    \item 对于字符串，\texttt{+} 代表字符串拼接（Concatenation）。
+    \item Python 无法自动确定你是想把字符串转成数字做加法，还是把数字转成字符串做拼接。
+\end{itemize}
+
+
+
+\tcbline
+
+\textbf{报错类型：}
+程序会抛出 \texttt{TypeError: unsupported operand type(s) for +: 'int' and 'str'}。
+
+\textbf{结论：} 
+混合使用数字和字符串进行加法运算而不进行显式类型转换是不受支持的。故正确答案是 \textbf{D}。
+
+\tcbline
+
+\textbf{修正方法：}
+\begin{itemize}
+    \item 若要结果为 $6$：使用 \texttt{var1 + var2 + int(var3)}。
+    \item 若要结果为 \texttt{"33"}：使用 \texttt{str(var1 + var2) + var3}。
+\end{itemize}
+\end{tcolorbox}
+
+% ==================================================
+% Question 12: String Literals
+% ==================================================
+\item A string literal in Python must be enclosed in \underline{\hspace{1cm}}. \textbf{d}
+
+a. parentheses \\
+b. single-quotes \\
+c. double-quotes \\
+d. either single-quotes or double-quotes
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!50!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中 \textbf{字符串字面量 (String Literals)} 的定义规则。
+
+\begin{itemize}
+    \item \textbf{引号的使用}：Python 在设计上非常灵活，允许使用单引号 (\texttt{'...'}) 或双引号 (\texttt{"..."}) 来创建字符串。
+    \item \textbf{功能等价}：在 Python 中，\texttt{'Hello'} 和 \texttt{"Hello"} 是完全等价的，生成的字符串对象没有任何区别。
+    \item \textbf{嵌套规则}：
+    \begin{itemize}
+        \item 如果字符串内部包含单引号，可以使用双引号包裹，如 \texttt{"It's Python"}。
+        \item 如果字符串内部包含双引号，可以使用单引号包裹，如 \texttt{'He said "Hello"'}。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[a.] \textbf{parentheses (圆括号)}：通常用于元组定义、函数调用或控制运算优先级，不能用于定义字符串。
+    \item[b.] \textbf{single-quotes (单引号)}：可以定义字符串，但不是唯一方式。
+    \item[c.] \textbf{double-quotes (双引号)}：可以定义字符串，但也不是唯一方式。
+    \item[d.] \textbf{either single-quotes or double-quotes}：准确描述了 Python 的语法规则。
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{结论：} 
+Python 字符串字面量必须由成对的单引号或双引号包围。故正确答案是 \textbf{d}。
+
+\tcbline
+
+\textbf{知识拓展：}
+除了单双引号，Python 还支持\textbf{三引号} (\texttt{'''...'''} 或 \texttt{"""..."""})，用于定义多行字符串或编写文档字符串 (docstrings)。
+\end{tcolorbox}
+
+% ==================================================
+% Question 13: Python Comments
+% ==================================================
+\item This symbol marks the beginning of a comment in Python. \textbf{d}
+
+a. \texttt{\&} \quad
+b. \texttt{*} \quad
+c. \texttt{**} \quad
+d. \texttt{\#}
+
+\begin{tcolorbox}[colback=yellow!5!white, colframe=yellow!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{注释 (Comments)} 语法。
+
+\begin{itemize}
+    \item \textbf{注释的作用}：注释是写给开发者看的文字，用于解释代码逻辑。Python 解释器在执行代码时会完全忽略掉注释内容。
+    \item \textbf{单行注释符号}：在 Python 中，单行注释以 \texttt{\#} 号开头。从 \texttt{\#} 开始直到该行结束的所有内容都被视为注释。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[a.] \texttt{\&}：位运算符（AND），不用于注释。
+    \item[b.] \texttt{*}：算术乘法运算符或解包运算符，不用于注释。
+    \item[c.] \texttt{**}：幂运算符（如 $5^2$），不用于注释。
+    \item[d.] \texttt{\#}：\textbf{正确}。这是 Python 定义单行注释的标准符号。
+\end{enumerate}
+
+\tcbline
+
+\textbf{代码示例：}
+\begin{lstlisting}
+# 这是一个注释，解释下面的变量
+radius = 5  # 计算圆的半径
+\end{lstlisting}
+
+\tcbline
+
+\textbf{结论：} 
+在 Python 中，\texttt{\#} 符号标识注释的开始。故正确答案是 \textbf{d}。
+
+\tcbline
+
+\textbf{对比其他语言：}
+\begin{itemize}
+    \item C/C++/Java 使用 \texttt{// }。
+    \item HTML/XML 使用 \texttt{}。
+    \item SQL 使用 \texttt{-- }。
+\end{itemize}
+\end{tcolorbox}
+
+% ==================================================
+% Question 14: Invalid Assignment
+% ==================================================
+\item Which of the following statements will cause an error? \textbf{b}
+
+a. \texttt{x = 17} \\
+b. \texttt{17 = x} \\
+c. \texttt{x = 99999} \\
+d. \texttt{x = "17"}
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{赋值运算符 (\texttt{=})} 的语法规则以及 \textbf{左值 (L-value)} 的概念。
+
+\begin{itemize}
+    \item \textbf{赋值逻辑}：赋值运算符 \texttt{=} 的作用是将等号\textbf{右侧}的值（表达式的结果）存储到等号\textbf{左侧}的变量空间中。
+    \item \textbf{左值要求}：等号左侧必须是一个可以存储数据的“容器”，通常是一个变量名。它不能是一个不可改变的字面量（Literal），如数字或字符串。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[a.] \texttt{x = 17}：合法。将整数 $17$ 赋值给变量 \texttt{x}。
+    \item[b.] \texttt{17 = x}：\textbf{非法 (Error)}。数字 $17$ 是一个常数（字面量），它不是一个变量，无法被赋值。这会触发 \texttt{SyntaxError: cannot assign to literal}。
+    \item[c.] \texttt{x = 99999}：合法。Python 的整数支持任意精度，这是一个非常大的整数赋值。
+    \item[d.] \texttt{x = "17"}：合法。将字符串 \texttt{"17"} 赋值给变量 \texttt{x}。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+赋值语句的方向性是固定的：\texttt{变量 = 值}。尝试给字面量赋值会导致语法错误。故正确答案是 \textbf{b}。
+
+\tcbline
+
+\textbf{记忆要点：}
+在编程中，可以把变量想象成“盒子”，把值想象成“物品”。可以把物品放进盒子里（\texttt{box = item}），但不能把盒子放进物品里（\texttt{item = box}）。
+\end{tcolorbox}
+
+% ==================================================
+% Question 15: Integer Division Operator
+% ==================================================
+\item This operator performs integer division. \textbf{a}
+
+a. \texttt{//} \\
+b. \texttt{\%} \\
+c. \texttt{**} \\
+d. \texttt{/}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{地板除 (Floor Division)}，也就是整数除法运算符。
+
+\begin{itemize}
+    \item \textbf{运算符 \texttt{//}}：执行除法运算并向下取整到最接近的整数（即丢弃小数部分）。
+    \item \textbf{与普通除法的区别}：
+    \begin{itemize}
+        \item \texttt{7 / 2} 结果为 \texttt{3.5}（浮点数除法）。
+        \item \texttt{7 // 2} 结果为 \texttt{3}（整数除法）。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[a.] \texttt{//}：\textbf{正确}。用于执行整数除法。
+    \item[b.] \texttt{\%}：取模运算符，返回除法的\textbf{余数}（例如 \texttt{7 \% 2} 结果为 \texttt{1}）。
+    \item[c.] \texttt{**}：幂运算符（例如 \texttt{5 ** 2} 结果为 \texttt{25}）。
+    \item[d.] \texttt{/}：普通除法运算符，在 Python 3 中总是返回浮点数。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+若要执行整数除法并获取商的整数部分，必须使用 \texttt{//}。故正确答案是 \textbf{a}。
+
+\tcbline
+
+\textbf{小贴士：}
+如果操作数中包含浮点数（如 \texttt{7.0 // 2}），结果虽然仍是整数部分，但类型会是浮点型（即 \texttt{3.0}）。
+\end{tcolorbox}
+
+% ==================================================
+% Question 16: Exponentiation Operator
+% ==================================================
+\item This is an operator that raises a number to a power. \textbf{c}
+
+a. \texttt{\%} \\
+b. \texttt{*} \\
+c. \texttt{**} \\
+d. \texttt{/}
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{幂运算符 (Exponentiation Operator)}，用于计算一个数的 $n$ 次方。
+
+\begin{itemize}
+    \item \textbf{运算符 \texttt{**}}：在 Python 中，双星号用于表示底数的指数幂运算。例如，$a^{b}$ 在代码中写作 \texttt{a ** b}。
+    \item \textbf{运算顺序}：幂运算符在算术运算符中拥有非常高的优先级（高于乘、除、加、减）。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[a.] \texttt{\%}：取模运算符（Modulo），用于返回除法的余数。
+    \item[b.] \texttt{*}：乘法运算符。
+    \item[c.] \texttt{**}：\textbf{正确}。幂运算符。
+    \item[d.] \texttt{/}：除法运算符（结果为浮点数）。
+\end{enumerate}
+
+\tcbline
+
+\textbf{代码示例：}
+\begin{lstlisting}
+print(2 ** 3)  # 结果为 8 (2 * 2 * 2)
+print(10 ** 2) # 结果为 100
+\end{lstlisting}
+
+\tcbline
+
+\textbf{结论：} 
+用于执行次方运算的运算符是 \texttt{**}。故正确答案是 \textbf{c}。
+
+\tcbline
+
+\textbf{易错点：}
+在很多其他语言中（如 Excel 或某些计算器语法），幂运算使用 \texttt{\^} 符号。但在 Python 中，\texttt{\^} 是按位异或运算符（Bitwise XOR），千万不要混淆。
+\end{tcolorbox}
+
+% ==================================================
+% Question 17: Modulus Operator
+% ==================================================
+\item This operator performs division, but instead of returning the quotient it returns the remainder. \textbf{a}
+
+a. \texttt{\%} \\
+b. \texttt{*} \\
+c. \texttt{**} \\
+d. \texttt{/}
+
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{取模运算符 (Modulus Operator)}。
+
+\begin{itemize}
+    \item \textbf{运算符 \texttt{\%}}：执行除法运算，但返回的是除法后的\textbf{余数} (Remainder)，而不是商 (Quotient)。
+    \item \textbf{数学表示}：如果执行 $a \div b = q \dots r$，那么 \texttt{a \% b} 的结果就是 $r$。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[a.] \texttt{\%}：\textbf{正确}。取模运算符，返回余数。
+    \item[b.] \texttt{*}：乘法运算符。
+    \item[c.] \texttt{**}：幂运算符。
+    \item[d.] \texttt{/}：除法运算符（返回浮点数商）。
+\end{enumerate}
+
+\tcbline
+
+\textbf{实际应用示例：}
+\begin{itemize}
+    \item \textbf{判断奇偶性}：\texttt{n \% 2} 如果等于 $0$ 则是偶数，等于 $1$ 则是奇数。
+    \item \textbf{限制范围}：例如 \texttt{index \% length} 可以确保索引永远在数组长度范围内循环。
+\end{itemize}
+
+
+
+\tcbline
+
+\textbf{示例代码：}
+\begin{lstlisting}
+print(10 % 3)  # 结果为 1 (10 / 3 = 3 余 1)
+print(12 % 4)  # 结果为 0 (12 能被 4 整除)
+\end{lstlisting}
+
+\textbf{结论：} 
+返回除法余数的运算符是 \texttt{\%}。故正确答案是 \textbf{a}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 18: Data Type Identification
+% ==================================================
+\item Suppose the following statement is in a program:
+\begin{lstlisting}
+price = 99.0
+\end{lstlisting}
+After this statement executes, the \texttt{price} variable will reference a value of which data type? \textbf{b}
+
+a. int \\
+b. float \\
+c. currency \\
+d. str
+
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{数据类型识别}，特别是如何区分整型和浮点型。
+
+\begin{itemize}
+    \item \textbf{浮点型 (float)}：在 Python 中，任何包含\textbf{小数点}的数字字面量都会被识别为 \texttt{float} 类型。即使小数点后面是零（如 \texttt{99.0}），它依然被视为浮点数。
+    \item \textbf{动态类型}：Python 是一种动态类型语言，变量的类型由它所引用的对象决定。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[a.] \texttt{int} (整型)：用于表示没有小数部分的整数（如 \texttt{99}）。
+    \item[b.] \texttt{float} (浮点型)：\textbf{正确}。用于表示实数，包括带小数点的数字。
+    \item[c.] \texttt{currency}：\textbf{错误}。Python 原生数据类型中并没有名为 \texttt{currency} 的类型（虽然可以使用 \texttt{decimal} 模块处理货币）。
+    \item[d.] \texttt{str} (字符串)：用于表示文本，必须用引号包裹（如 \texttt{"99.0"}）。
+\end{enumerate}
+
+\tcbline
+
+\textbf{验证方法：}
+在 Python 中，你可以使用 \texttt{type()} 函数来检查变量的类型：
+\begin{lstlisting}
+price = 99.0
+print(type(price))  # 输出: <class 'float'>
+\end{lstlisting}
+
+
+
+\tcbline
+
+\textbf{结论：} 
+由于数字中包含小数点，该变量引用的数据类型是 \texttt{float}。故正确答案是 \textbf{b}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 19: 
+% ==================================================
+\item Which built-in function can be used to read input that has been typed on the keyboard? 
+
+a. input() \\
+b. get\_input() \\
+c. read\_input() \\
+d. keyboard()
+
+\begin{tcolorbox}[colback=purple!5!white, colframe=purple!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中最基本的 \textbf{标准输入 (Standard Input)} 函数。
+
+\begin{itemize}
+    \item \textbf{input() 函数}：这是 Python 的内置函数，用于暂停程序的执行，等待用户从键盘输入文本。
+    \item \textbf{工作机制}：
+    \begin{itemize}
+        \item 程序运行到 \texttt{input()} 时会阻塞，直到用户按下回车键（Enter）。
+        \item 该函数总是将用户的输入作为 \textbf{字符串 (string)} 返回，即使输入的是数字。
+        \item 可以接受一个可选的参数作为“提示信息”（Prompt）。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[a.] \texttt{input()}：\textbf{正确}。这是官方定义的唯一用于从键盘读取输入的内置函数。
+    \item[b.] \texttt{get\_input()}：错误。Python 中没有这个内置函数（某些库可能有类似命名的函数，但不是标准内置）。
+    \item[c.] \texttt{read\_input()}：错误。这不是标准内置函数。
+    \item[d.] \texttt{keyboard()}：错误。这不是函数，通常在底层驱动或第三方库中会提到键盘，但不是用来读取字符串输入的函数。
+\end{enumerate}
+
+\tcbline
+
+\textbf{代码示例：}
+\begin{lstlisting}
+name = input("Enter your name: ")
+print("Hello, " + name)
+\end{lstlisting}
+
+
+
+\tcbline
+
+\textbf{结论：} 
+用于读取键盘输入的内置函数是 \texttt{input()}。故正确答案是 \textbf{a}。
+
+\tcbline
+
+\textbf{提醒：}
+在 Python 2 中，对应的函数是 \texttt{raw\_input()}，而 \texttt{input()} 会尝试评估输入的内容。但在 **Python 3** 中，我们统一使用 \texttt{input()}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 20: int to float Conversion
+% ==================================================
+\item Which built-in function can be used to convert an int value to a float? \textbf{b}
+
+a. \texttt{int\_to\_float()} \\
+b. \texttt{float()} \\
+c. \texttt{convert()} \\
+d. \texttt{int()}
+
+\begin{tcolorbox}[colback=cyan!5!white, colframe=cyan!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{显式类型转换 (Explicit Type Conversion)}，也称为“强制类型转换”。
+
+\begin{itemize}
+    \item \textbf{float() 函数}：这是 Python 的内置构造函数，用于将其他数据类型（如整数或符合数字格式的字符串）转换为 \textbf{浮点数 (float)}。
+    \item \textbf{转换逻辑}：当一个整数被转换为浮点数时，Python 会在数值后添加小数点。例如，整数 $10$ 会变成浮点数 $10.0$。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[a.] \texttt{int\_to\_float()}：错误。Python 并没有这种命名的内置函数。
+    \item[b.] \texttt{float()}：\textbf{正确}。这是标准的转换函数。
+    \item[c.] \texttt{convert()}：错误。这不是 Python 的内置函数。
+    \item[d.] \texttt{int()}：错误。这个函数的作用正好相反，它是将其他类型转换为\textbf{整数}（通过截断小数部分）。
+\end{enumerate}
+
+\tcbline
+
+\textbf{代码示例：}
+\begin{lstlisting}
+number = 5
+result = float(number)
+print(result)        # 输出: 5.0
+print(type(result))  # 输出: <class 'float'>
+\end{lstlisting}
+
+
+
+\tcbline
+
+\textbf{结论：} 
+用于将整数转换为浮点数的内置函数是 \texttt{float()}。故正确答案是 \textbf{b}。
+
+\tcbline
+
+\textbf{知识拓展：}
+这种转换在进行除法运算或需要更高精度计算时非常有用。即使是字符串 \texttt{"3.14"}，也可以通过 \texttt{float("3.14")} 转换为数值类型。
+\end{tcolorbox}
+
+% ==================================================
+% Question 21: Invalid String Literal
+% ==================================================
+\item Choosing the \textbf{wrong} way to create a string literal \texttt{Ault'Kelly}: \textbf{A}
+
+A. \texttt{str1 = 'Ault\textbackslash\textbackslash 'Kelly'} \\
+B. \texttt{str1 = 'Ault\textbackslash 'Kelly'} \\
+C. \texttt{str1 = """Ault'Kelly"""}
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 字符串中的 \textbf{转义字符 (Escape Characters)} 以及如何处理字符串内部的引号冲突。
+
+\begin{itemize}
+    \item \textbf{核心规则}：如果字符串使用单引号 \texttt{' '} 定义，那么内部出现的单引号必须使用反斜杠 \texttt{\textbackslash} 进行转义（即 \texttt{\textbackslash'}），否则 Python 会认为字符串提前结束。
+    \item \textbf{目标字符串}：我们需要创建的内容是 \texttt{Ault'Kelly}（中间有一个单引号，没有反斜杠）。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \texttt{'Ault\textbackslash\textbackslash 'Kelly'}：\textbf{错误的做法 (符合题意)}。
+    \begin{itemize}
+        \item \texttt{\textbackslash\textbackslash} 会被解析为一个字面意义上的反斜杠。
+        \item 紧随其后的 \texttt{'Kelly'} 中的单引号由于没有被转义，会直接闭合前面的单引号，导致语法错误（SyntaxError）。
+        \item 即使不报错，它的本意也是试图创建一个带有反斜杠的字符串，不符合目标。
+    \end{itemize}
+    \item[B.] \texttt{'Ault\textbackslash 'Kelly'}：\textbf{正确的做法}。反斜杠转义了单引号，使其成为字符串内容的一部分。
+    \item[C.] \texttt{"""Ault'Kelly"""}：\textbf{正确的做法}。使用三引号定义字符串时，内部可以直接包含单引号或双引号而无需转义。
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{结论：} 
+选项 A 的写法会导致语法错误或逻辑错误，是创建该特定字符串的“错误方式”。故正确答案是 \textbf{A}。
+
+\tcbline
+
+\textbf{小技巧：}
+如果你不想处理复杂的转义，最简单的方法是交叉使用引号。例如，使用双引号包裹含有单引号的字符串：\texttt{"Ault'Kelly"}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 22: Local Variable Scope
+% ==================================================
+\item What is the output of the following code? \textbf{B}
+\begin{lstlisting}
+x = 50
+def fun1():
+    x = 25
+    print(x)
+
+fun1()
+\end{lstlisting}
+
+A. NameError \quad B. 25 \quad C. 50
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 的 \textbf{变量作用域 (Variable Scope)}，特别是 \textbf{全局变量} 与 \textbf{局部变量} 的区别。
+
+\begin{itemize}
+    \item \textbf{全局变量 (Global Variable)}：在函数外部定义的变量（如第一行的 \texttt{x = 50}）。它在整个程序范围内都是可见的。
+    \item \textbf{局部变量 (Local Variable)}：在函数内部定义的变量（如函数内的 \texttt{x = 25}）。它的生命周期仅限于函数运行期间，且会“遮蔽”（Shadow）同名的全局变量。
+\end{itemize}
+
+\tcbline
+
+\textbf{代码执行流程分析：}
+\begin{enumerate}
+    \item \texttt{x = 50}：在全局命名空间创建变量 \texttt{x}。
+    \item \texttt{def fun1():}：定义函数，此时不执行函数体。
+    \item \texttt{fun1()}：调用函数。
+    \begin{itemize}
+        \item 进入函数内部，执行 \texttt{x = 25}。这会在 \texttt{fun1} 的局部命名空间创建一个新的 \texttt{x}。
+        \item 执行 \texttt{print(x)}：Python 会遵循 \textbf{LEGB 规则}（Local $\rightarrow$ Enclosing $\rightarrow$ Global $\rightarrow$ Built-in）寻找变量。由于在 Local（局部）作用域找到了 \texttt{x}，所以直接打印局部变量的值。
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+
+
+\textbf{结论：} 
+函数内部的 \texttt{print} 输出的是局部变量的值 \texttt{25}。即使外部有一个 \texttt{x = 50}，在函数内部它也被局部定义的 \texttt{x} 覆盖了。故正确答案是 \textbf{B}。
+
+\tcbline
+
+\textbf{思考：}
+如果在调用 \texttt{fun1()} 之后，在函数外部再执行一次 \texttt{print(x)}，输出结果会是多少？
+答案是 \textbf{50}，因为函数内部的局部赋值不会影响外部的全局变量（除非显式使用 \texttt{global} 关键字）。
+\end{tcolorbox}
+
+% ==================================================
+% Question 23: Variable Scope Error
+% ==================================================
+\item What is the output of the following code? \textbf{A}
+\begin{lstlisting}
+M = 50
+def fun1():
+    m = 25
+
+fun1()
+print(m)
+\end{lstlisting}
+
+A. NameError \quad B. 25 \quad C. 50
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 的 **大小写敏感性 (Case Sensitivity)** 以及 **变量作用域 (Scope)**。
+
+\begin{itemize}
+    \item \textbf{大小写敏感}：Python 严格区分变量名的大小写。在这个例子中，大写的 \texttt{M} 和小写的 \texttt{m} 是两个完全不同的变量名。
+    \item \textbf{变量生命周期}：
+    \begin{itemize}
+        \item \texttt{M = 50}：定义了一个全局变量 \textbf{大写 M}。
+        \item \texttt{m = 25}：在函数内部定义了一个局部变量 \textbf{小写 m}。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{执行流程分析：}
+\begin{enumerate}
+    \item \texttt{M = 50}：程序创建了全局变量 \texttt{M}。
+    \item \texttt{fun1()} 被调用：
+    \begin{itemize}
+        \item 在函数作用域内创建了局部变量 \texttt{m}。
+        \item 函数执行完毕，局部作用域销毁，局部变量 \texttt{m} 也随之消失。
+    \end{itemize}
+    \item \texttt{print(m)}：程序在全局作用域查找小写的 \texttt{m}。
+    \begin{itemize}
+        \item \textbf{找不到变量}：全局作用域里只有 \texttt{M}，没有 \texttt{m}。
+    \end{itemize}
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{结论：} 
+由于在全局作用域中从未定义过小写的 \texttt{m}，试图打印它会导致程序崩溃。报错信息为：\texttt{NameError: name 'm' is not defined}。故正确答案是 \textbf{A}。
+
+\tcbline
+
+\textbf{对比点：}
+如果最后一行是 \texttt{print(M)}（大写），结果将是 \texttt{50}。如果函数内写的是 \texttt{global m; m = 25}，结果将是 \texttt{25}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 24: Type Checking with isinstance
+% ==================================================
+\item What is the result of \texttt{print(type([]) is list)}? \textbf{B}
+
+A. False \quad B. True
+
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中 \textbf{类型检查 (Type Checking)} 的底层机制以及 \texttt{type()} 函数的返回值。
+
+\begin{itemize}
+    \item \textbf{表达式拆解}：
+    \begin{itemize}
+        \item \texttt{[]}：这是一个空的 \textbf{列表 (list)} 字面量。
+        \item \texttt{type([])}：调用内置函数 \texttt{type()}。对于列表对象，它返回的是列表类型对象，即 \texttt{<class 'list'>}。
+        \item \texttt{list}：这是 Python 的内置关键字/类名，代表列表类型。
+    \end{itemize}
+    \item \textbf{身份比较 (\texttt{is})}：
+    \begin{itemize}
+        \item \texttt{is} 运算符检查两个对象是否为同一个实例。在 Python 中，内置类型的类对象（如 \texttt{list}, \texttt{int}, \texttt{str}）在内存中是单例的。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑推导：}
+\begin{enumerate}
+    \item \texttt{type([])} 的结果精确等同于内置的 \texttt{list} 类。
+    \item 因此，比较 \texttt{type([]) is list} 实际上是在问：“列表实例的类型是否就是 \texttt{list} 类本身？”
+    \item 答案显然是肯定的。
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{结论：} 
+该表达式评估为 \textbf{True}。故正确答案是 \textbf{B}。
+
+\tcbline
+
+\textbf{知识拓展：}
+虽然 \texttt{type(obj) is class} 可以工作，但在 Python 编程实践中，通常推荐使用 \texttt{isinstance([], list)} 来进行类型检查，因为 \texttt{isinstance} 还能处理子类继承的情况。
+\end{tcolorbox}
+
+% ==================================================
+% Question 25: Invalid String Creation
+% ==================================================
+\item Which of the following cannot create a valid String? \textbf{D}
+
+A. \texttt{str1 = 'str1'} \\
+B. \texttt{str1 = "str1"} \\
+C. \texttt{str1 = """str"""} \\
+D. \texttt{str1 = str(Jessa)}
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 字符串的创建方式以及 \textbf{变量定义} 与 \textbf{字面量} 之间的区别。
+
+\begin{itemize}
+    \item \textbf{字符串字面量}：必须被包裹在引号内（单引号、双引号或三引号）。
+    \item \textbf{变量引用}：如果不带引号直接写一个单词（如 \texttt{Jessa}），Python 会将其视为一个变量名，并尝试在内存中寻找该变量对应的值。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \texttt{'str1'}：合法。使用单引号定义字符串。
+    \item[B.] \texttt{"str1"}：合法。使用双引号定义字符串。
+    \item[C.] \texttt{"""str"""}：合法。使用三引号定义多行字符串。
+    \item[D.] \texttt{str(Jessa)}：\textbf{非法 (Error)}。
+    \begin{itemize}
+        \item 这里 \texttt{Jessa} 没有加引号，Python 会认为它是一个名为 \texttt{Jessa} 的\textbf{变量}。
+        \item 如果代码之前没有定义过 \texttt{Jessa = "some value"}，程序会抛出 \texttt{NameError: name 'Jessa' is not defined}。
+        \item 即使定义了，这也是在做类型转换，而不是直接通过字面量创建字符串。
+    \end{itemize}
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{结论：} 
+选项 D 试图将一个未定义的变量传递给 \texttt{str()} 函数，这在标准语法中无法直接创建一个有效的字符串字面量。故正确答案是 \textbf{D}。
+
+\tcbline
+
+\textbf{修正建议：}
+如果你想创建内容为 "Jessa" 的字符串，应该写成 \texttt{str1 = "Jessa"} 或者 \texttt{str1 = str("Jessa")}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 26: Type of type(10)
+% ==================================================
+\item What is the data type of \texttt{print(type(10))}? \textbf{C}
+
+A. float \quad B. integer \quad C. int
+
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 的 \textbf{内置数据类型名称} 以及 \texttt{type()} 函数的返回结果。
+
+\begin{itemize}
+    \item \textbf{数值识别}：数字 \texttt{10} 是一个不带小数点的数字，在 Python 中被归类为 \textbf{整数}。
+    \item \textbf{关键字名称}：在 Python 编程语言中，表示整数类型的官方关键字是 \texttt{int}。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项辨析：}
+\begin{enumerate}
+    \item[A.] \textbf{float}：浮点型，用于表示带小数的数字（如 \texttt{10.0}）。
+    \item[B.] \textbf{integer}：这是数学上的称呼“整数”。虽然逻辑上正确，但它不是 Python 中的\textbf{编程关键字}。
+    \item[C.] \textbf{int}：\textbf{正确}。这是 Python 内部定义的类名。当你运行 \texttt{type(10)} 时，Python 会返回 \texttt{<class 'int'>}。
+\end{enumerate}
+
+\tcbline
+
+
+\textbf{实验验证：}
+\begin{lstlisting}
+result = type(10)
+print(result) 
+# 输出结果为: <class 'int'>
+\end{lstlisting}
+
+\textbf{结论：} 
+根据编程语境，\texttt{10} 是 \texttt{int} 类型。
+\end{tcolorbox}
+
+% ==================================================
+% Question 27: Tuple Slicing Type
+% ==================================================
+\item What is the data type of the following? \textbf{C}
+\begin{lstlisting}
+aTuple = (1, 'Jhon', 1+3j)
+print(type(aTuple[2:3]))
+\end{lstlisting}
+
+A. list \quad B. complex \quad C. tuple
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中 \textbf{切片操作 (Slicing)} 的一个核心原则：**切片操作返回的对象类型通常与原对象类型一致**。
+
+\begin{itemize}
+    \item \textbf{对象识别}：\texttt{aTuple} 是一个元组（Tuple），由圆括号定义。
+    \item \textbf{索引 vs 切片}：
+    \begin{itemize}
+        \item \textbf{索引 (Indexing)}：\texttt{aTuple[2]} 访问的是索引为 2 的具体元素。结果是 \texttt{1+3j}，其类型是 \textbf{complex}（复数）。
+        \item \textbf{切片 (Slicing)}：\texttt{aTuple[2:3]} 访问的是从索引 2 到 3（不包含 3）的**范围**。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{关键知识点：}
+在 Python 中，当你对一个序列（如 list, tuple, string）进行切片时，返回的永远是该序列的一个“子集”，其**数据结构保持不变**。
+\begin{itemize}
+    \item 列表的切片结果依然是列表。
+    \item 字符串的切片结果依然是字符串。
+    \item \textbf{元组的切片结果依然是元组}。
+\end{itemize}
+
+
+
+\tcbline
+
+\textbf{计算过程：}
+\begin{enumerate}
+    \item \texttt{aTuple[2:3]} 截取了从位置 2 开始到位置 3 结束的部分。
+    \item 结果是一个只包含一个元素的元组：\texttt{( (1+3j), )}。
+    \item \texttt{type()} 函数识别该结果，返回 \texttt{<class 'tuple'>}。
+\end{enumerate}
+
+\textbf{结论：} 
+切片操作保留了容器类型。故正确答案是 \textbf{C}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 28: Boolean Conversion
+% ==================================================
+\item What is the output of the following code? \textbf{D}
+\begin{lstlisting}
+print(bool(0), bool(3.14159), bool(-3), bool(1.0+1j))
+\end{lstlisting}
+
+A. False True False True \\
+B. True True False True \\
+C. True True False True \\
+D. False True True True
+
+\begin{tcolorbox}[colback=purple!5!white, colframe=purple!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{布尔测试 (Truth Value Testing)}，即如何将其他数据类型转换为布尔值 (\texttt{True} 或 \texttt{False})。
+
+\begin{itemize}
+    \item \textbf{bool() 函数}：用于将一个值转换成布尔类型。
+    \item \textbf{虚值 (Falsy Values)}：在 Python 中，以下数值会被评估为 \texttt{False}：
+    \begin{itemize}
+        \item 定义为 False 的常量：\texttt{None}, \texttt{False}。
+        \item 任何数值类型的零：\texttt{0}, \texttt{0.0}, \texttt{0j}, \texttt{Decimal(0)}, \texttt{Fraction(0, 1)}。
+        \item 空的序列和集合：\texttt{''}, \texttt{()}, \texttt{[]}, \texttt{\{\}}, \texttt{set()}, \texttt{range(0)}。
+    \end{itemize}
+    \item \textbf{实值 (Truthy Values)}：除了上述虚值外，绝大多数对象都被评估为 \texttt{True}。
+\end{itemize}
+
+\tcbline
+
+\textbf{逐项分析：}
+\begin{enumerate}
+    \item \texttt{bool(0)}：整数零，结果为 \textbf{False}。
+    \item \texttt{bool(3.14159)}：非零浮点数，结果为 \textbf{True}。
+    \item \texttt{bool(-3)}：非零整数（注意：负数也是非零的），结果为 \textbf{True}。
+    \item \texttt{bool(1.0+1j)}：非零复数，结果为 \textbf{True}。
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{结论：} 
+对应的布尔序列为 \texttt{False True True True}。故正确答案是 \textbf{D}。
+
+\tcbline
+
+\textbf{核心总结：}
+在数值转换中，**只有 0 是 False**，其他任何数字（无论正负、小数还是复数）都是 True。
+\end{tcolorbox}
+
+% ==================================================
+% Question 29: range Type in Python 3
+% ==================================================
+\item In Python 3, what is the output of \texttt{type(range(5))}? (What data type it will return.) \textbf{C}
+
+A. int \quad B. list \quad C. range \quad D. None
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 3 中 \textbf{\texttt{range} 对象} 的本质及其与 Python 2 的重要区别。
+
+\begin{itemize}
+    \item \textbf{\texttt{range()} 函数}：在 Python 3 中，\texttt{range()} 不再返回一个列表，而是返回一个专门的 \textbf{可迭代对象 (Iterable)}，其类型名称就叫做 \texttt{range}。
+    \item \textbf{惰性求值 (Lazy Evaluation)}：\texttt{range} 对象在内存中非常高效。无论你定义 \texttt{range(5)} 还是 \texttt{range(1000000)}，它在内存中占用的空间是固定的，因为它只存储起始值、终止值和步长，只有在循环迭代时才产生具体的数字。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \texttt{int}：错误。\texttt{range} 是一个序列容器，不是单个整数。
+    \item[B.] \texttt{list}：错误。这是 Python 2 的行为。在 Python 3 中，如果你需要列表，必须显式转换：\texttt{list(range(5))}。
+    \item[C.] \texttt{range}：\textbf{正确}。Python 3 为其定义了专属的类。
+    \item[D.] \texttt{None}：错误。函数有明确的返回值。
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{实验验证：}
+\begin{lstlisting}
+r = range(5)
+print(type(r)) 
+# 输出结果为: <class 'range'>
+\end{lstlisting}
+
+\tcbline
+
+\textbf{结论：} 
+在 Python 3 中，\texttt{range(5)} 返回的是一个类型为 \texttt{range} 的对象。故正确答案是 \textbf{C}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 30: 
+% ==================================================
+\item What is the output of the following code? \textbf{B}
+\begin{lstlisting}
+def func1():
+    x = 50
+    return x
+func1()
+print(x)
+\end{lstlisting}
+
+A. 50 \quad B. NameError \quad C. None \quad D. 0
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!60!black, title=详细解答, enhanced, breakable]
+这道题再次深入考察了 \textbf{局部作用域 (Local Scope)} 的生命周期以及变量的访问权限。
+
+\begin{itemize}
+    \item \textbf{局部变量的定义}：在函数 \texttt{func1()} 内部定义的变量 \texttt{x} 是一个局部变量。它仅存在于该函数的命名空间内。
+    \item \textbf{作用域的隔离}：当函数执行完毕并返回结果后，该函数的作用域就会被销毁。在函数外部（全局作用域）是无法直接访问函数内部定义的局部变量的。
+\end{itemize}
+
+\tcbline
+
+\textbf{代码执行流程分析：}
+\begin{enumerate}
+    \item \textbf{定义函数}：定义 \texttt{func1}，其中包含局部变量 \texttt{x}。
+    \item \textbf{调用函数 \texttt{func1()}}：函数被执行，返回了数值 \texttt{50}。但请注意，程序**并没有将这个返回值赋值给任何全局变量**（例如没有写成 \texttt{result = func1()}）。
+    \item \textbf{执行 \texttt{print(x)}}：此时程序尝试在全局作用域寻找变量 \texttt{x}。
+    \begin{itemize}
+        \item 全局作用域中没有定义过 \texttt{x}。
+        \item 函数内部的 \texttt{x} 已经随着函数结束而不可见。
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+由于在执行 \texttt{print(x)} 的位置找不到变量 \texttt{x} 的定义，Python 解释器会抛出 \textbf{NameError: name 'x' is not defined}。故正确答案是 \textbf{B}。
+
+\tcbline
+
+\textbf{如何修正代码以输出 50？}
+如果你希望打印出那个值，必须接收函数的返回值：
+\begin{lstlisting}
+x = func1()  # 将函数的返回值赋给全局变量 x
+print(x)     # 此时输出 50
+\end{lstlisting}
+\end{tcolorbox}
+
+% ==================================================
+% Question 31: Operator Precedence (Multiplication First)
+% ==================================================
+\item What is the output of \texttt{print(10 - 4 * 2)}? \textbf{A}
+
+A. 2 \quad B. 12
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{运算符优先级 (Operator Precedence)}。
+
+\begin{itemize}
+    \item \textbf{优先级规则}：在 Python 的算术运算中，乘法 (\texttt{*})、除法 (\texttt{/})、取模 (\texttt{\%}) 和整除 (\texttt{//}) 的优先级高于加法 (\texttt{+}) 和减法 (\texttt{-})。这与标准数学中的“先乘除后加减”原则一致。
+    \item \textbf{计算步骤}：
+    \begin{enumerate}
+        \item 首先计算乘法部分：\texttt{4 * 2 = 8}。
+        \item 然后执行减法运算：\texttt{10 - 8 = 2}。
+    \end{enumerate}
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{2}：\textbf{正确}。按照先乘法后减法的顺序计算得出。
+    \item[B.] \textbf{12}：错误。这是在错误地先计算减法（$10-4=6$）再计算乘法（$6 \times 2=12$）时得到的结果。
+\end{enumerate}
+
+\tcbline
+
+\textbf{知识拓展：}
+如果你希望先执行减法，必须使用\textbf{括号}来显式改变优先级：\texttt{(10 - 4) * 2} 的结果才是 \texttt{12}。
+
+\tcbline
+
+\textbf{结论：} 
+由于乘法优先级更高，计算结果为 \textbf{2}。故正确答案是 \textbf{A}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 32: Exponentiation Associativity
+% ==================================================
+\item What is the output of \texttt{print(2 ** 3 ** 2)}? \textbf{B}
+
+A. 64 \quad B. 512
+
+\begin{tcolorbox}[colback=yellow!5!white, colframe=yellow!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 运算符中一个非常特殊且容易被忽视的规则：\textbf{幂运算符 (**)} 的 \textbf{结合性 (Associativity)}。
+
+\begin{itemize}
+    \item \textbf{结合性定义}：当一个表达式中出现多个优先级相同的运算符时，结合性决定了计算的方向。
+    \item \textbf{右结合性 (Right-to-Left)}：绝大多数 Python 算术运算符（如 \texttt{+}, \texttt{-}, \texttt{*}, \texttt{/}）都是\textbf{左结合}的。但 \textbf{幂运算符 (\texttt{**}) 是右结合的}。
+\end{itemize}
+
+\tcbline
+
+\textbf{计算过程详解：}
+对于表达式 \texttt{2 ** 3 ** 2}：
+\begin{enumerate}
+    \item \textbf{第一步}：由于是右结合，先计算右侧的指数部分：$3^2 = 9$。
+    \item \textbf{第二步}：将得到的结果作为左侧底数的指数：$2^9$。
+    \item \textbf{第三步}：计算 $2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2 = 512$。
+\end{enumerate}
+
+\tcbline
+
+
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{64}：错误。这是按照左结合方向计算的结果：$(2^3)^2 = 8^2 = 64$。
+    \item[B.] \textbf{512}：\textbf{正确}。按照 Python 官方定义的右结合方向计算得出。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+在 Python 中，\texttt{a ** b ** c} 等价于 \texttt{a ** (b ** c)}。故正确答案是 \textbf{B}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 33: Division Result
+% ==================================================
+\item What is the value of the following Python expression? \textbf{A}
+\begin{lstlisting}
+print(36 / 4)
+\end{lstlisting}
+
+A. 9.0 \quad B. 9
+
+\begin{tcolorbox}[colback=cyan!5!white, colframe=cyan!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 3 中 **除法运算符 (Division Operator)** 的返回类型特性。
+
+\begin{itemize}
+    \item \textbf{真除法 (True Division)}：在 Python 3 中，使用单个斜杠 \texttt{/} 执行的是真除法。
+    \item \textbf{类型规则}：无论操作数（被除数和除数）是整数还是浮点数，\texttt{/} 运算的结果``永远是一个浮点数 (float)''。即使结果是一个完美的整数，Python 也会自动在后面补上 \texttt{.0}。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{9.0}：\textbf{正确}。这是 Python 3 的标准行为。
+    \item[B.] \textbf{9}：错误。在 Python 2 中，两个整数相除会得到整数。但在 Python 3 中，必须使用双斜杠 \texttt{//}（整除运算符）才会得到整数 \texttt{9}。
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{代码实验对比：}
+\begin{lstlisting}
+print(36 / 4)   # 输出: 9.0 (float)
+print(36 // 4)  # 输出: 9 (int)
+\end{lstlisting}
+
+\tcbline
+
+\textbf{结论与答案修正：} 
+根据 Python 3 的语言规范，结果应当带有小数点。
+
+\end{tcolorbox}
+
+% ==================================================
+% Question 34: Operator Precedence with Power
+% ==================================================
+\item What is the output of \texttt{print(2 * 3 ** 3 * 4)}? \textbf{A}
+
+A. 216 \quad B. 864
+
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中 \textbf{混合运算符的优先级 (Operator Precedence)}，重点在于乘法 (\texttt{*}) 与幂运算 (\texttt{**}) 的先后顺序。
+
+\begin{itemize}
+    \item \textbf{优先级排序}：在 Python 算术运算中，幂运算符 \texttt{**} 的优先级高于乘法 \texttt{*}、除法 \texttt{/} 和取模 \texttt{\%}。
+    \item \textbf{计算方向}：当优先级相同时（如表达式中有两个乘法），按照从左到右的顺序执行。
+\end{itemize}
+
+\tcbline
+
+\textbf{逐步计算过程：}
+表达式：\texttt{2 * 3 ** 3 * 4}
+\begin{enumerate}
+    \item \textbf{第一步（最高优先级）}：计算幂运算 $3^3$。
+    $$3 \times 3 \times 3 = 27$$
+    此时表达式变为：\texttt{2 * 27 * 4}
+    \item \textbf{第二步（从左向右乘）}：计算 $2 \times 27$。
+    $$2 \times 27 = 54$$
+    此时表达式变为：\texttt{54 * 4}
+    \item \textbf{第三步}：计算最后一步乘法。
+    $$54 \times 4 = 216$$
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{216}：\textbf{正确}。严格遵循先幂运算后乘法的原则。
+    \item[B.] \textbf{864}：错误。这是在错误地先计算了前面的乘法（$2 \times 3=6$），然后计算 $6^3 \times 4$ 得到的结果。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+幂运算永远优先于乘法。故正确答案是 \textbf{A}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 35: Modulus Operator
+% ==================================================
+\item What is the output of \texttt{print(2 \% 6)}? \textbf{C}
+
+A. ValueError \quad B. 0.33 \quad C. 2
+
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{取模运算符 (Modulus Operator)}，符号为 \texttt{\%}。
+
+\begin{itemize}
+    \item \textbf{运算符定义}：取模运算返回两个数相除后的 \textbf{余数 (Remainder)}。
+    \item \textbf{基本公式}：对于 $a \% b$，其计算逻辑是找到一个整数 $q$，使得 $a = b \times q + r$，其中 $r$ 就是余数（且 $|r| < |b|$）。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑推导：}
+当我们计算 \texttt{2 \% 6} 时：
+\begin{enumerate}
+    \item \textbf{做除法}：$2 \div 6$。
+    \item \textbf{求商}：因为 $2$ 比 $6$ 小，所以商为 \textbf{0}。
+    \item \textbf{求余数}：$2 - (6 \times 0) = 2$。
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{关键规律：}
+在取模运算中，如果 **左侧的数字（被除数）小于右侧的数字（除数）**，且两者均为正数，那么结果始终等于 **左侧的数字本身**。
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{ValueError}：错误。取模运算对整数是完全合法的。
+    \item[B.] \textbf{0.33}：错误。这是除法的结果，不是余数。
+    \item[C.] \textbf{2}：\textbf{正确}。$2$ 除以 $6$ 商 $0$ 余 $2$。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+\texttt{2 \% 6} 的结果是 \textbf{2}。故正确答案是 \textbf{C}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 36: Exponentiation with Variables
+% ==================================================
+\item What is the output of the following code? \textbf{B}
+\begin{lstlisting}
+x = 6
+y = 2
+print(x ** y)
+\end{lstlisting}
+
+A. 66 \quad B. 36
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{幂运算符 (Exponentiation Operator)}，即 \texttt{**}。
+
+\begin{itemize}
+    \item \textbf{运算符含义}：在 Python 中，\texttt{**} 用于计算底数的指数次幂。表达式 \texttt{x ** y} 等价于数学中的 $x^y$。
+    \item \textbf{变量赋值}：
+    \begin{itemize}
+        \item \texttt{x = 6}（底数）
+        \item \texttt{y = 2}（指数）
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{计算过程：}
+\begin{enumerate}
+    \item 将变量代入表达式：\texttt{6 ** 2}。
+    \item 计算 $6$ 的平方：$6 \times 6 = 36$。
+\end{enumerate}
+
+\tcbline
+
+
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{66}：错误。这可能是误将两个数字连起来写，或者是对运算符理解不正确。
+    \item[B.] \textbf{36}：\textbf{正确}。这是 $6$ 的 $2$ 次方的计算结果。
+\end{enumerate}
+
+\tcbline
+
+\textbf{知识对比：}
+\begin{itemize}
+    \item \texttt{x * y} 的结果是 $12$（乘法）。
+    \item \texttt{x ** y} 的结果是 $36$（幂运算）。
+    \item 在某些其他语言（如 C++ 或 Java）中，幂运算通常使用 \texttt{pow(x, y)} 函数，而在 Python 中使用 \texttt{**} 更加简洁直观。
+\end{itemize}
+
+\tcbline
+
+\textbf{结论：} 
+该代码输出底数的平方值。故正确答案是 \textbf{B}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 37: Integer Division
+% ==================================================
+\item What is the output of the following code? \textbf{B}
+\begin{lstlisting}
+x = 6
+y = 2
+print(x // y)
+\end{lstlisting}
+
+A. 0 \quad B. 3
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{整除运算符 (Floor Division)}，符号为 \texttt{//}\text{。}
+
+\begin{itemize}
+    \item \textbf{运算符定义}：\texttt{//}\,执行除法运算，但会向下取整到最接近的整数（即“地板除”），返回结果的整数部分。
+    \item \textbf{与真除法的区别}：
+    \begin{itemize}
+        \item \texttt{/} (单斜杠)：返回浮点数结果（如 \texttt{6 / 2} 得到 \texttt{3.0}）。
+        \item \texttt{//} (双斜杠)：返回整数结果（如 \texttt{6 // 2} 得到 \texttt{3}）。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑推导：}
+\begin{enumerate}
+    \item 变量代入：执行 \texttt{6 // 2}\text{。}
+    \item 数学计算：$6 \div 2 = 3$\text{。}
+    \item 类型处理：由于使用的是整除运算符 \texttt{//}\text{，}结果不带小数位，直接输出 \textbf{3}\text{。}
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{0}：错误。这是在除数远大于被除数（且不进行浮点运算）时可能出现的逻辑错误。
+    \item[B.] \textbf{3}：\textbf{正确}。这是整数除法的精确结果。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+\texttt{x // y} 在此例中输出整数 $3$\text{。}故正确答案是 \textbf{B}\text{。}
+
+\tcbline
+
+\textbf{进阶提醒}：
+如果运算中包含负数，结果会向负无穷方向取整。例如 \texttt{-7 // 2} 的结果是 \texttt{-4} 而不是 \texttt{-3}\text{。}
+\end{tcolorbox}
+
+% ==================================================
+% Question 38: Conditional Statement
+% ==================================================
+\item What is the output of the following Python code? \textbf{C}
+\begin{lstlisting}
+x = 10
+y = 50
+if x ** 2 > 100 and y < 100:
+    print(x, y)
+\end{lstlisting}
+
+A. 100 500 \quad B. 10 50 \quad C. None
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 \textbf{条件判断语句 (if statement)} 中的 \textbf{布尔逻辑运算符 (\texttt{and})} 以及 \textbf{算术优先级}。
+
+\begin{itemize}
+    \item \textbf{逻辑规则}：对于 \texttt{A and B} 表达式，只有当条件 A 和条件 B 同时为 \texttt{True} 时，整个条件才成立。
+    \item \textbf{短路逻辑}：如果第一个条件 A 为 \texttt{False}，Python 甚至不会去检查条件 B，直接判定整体为 \texttt{False}。
+\end{itemize}
+
+\tcbline
+
+\textbf{条件拆解分析：}
+已知变量：\texttt{x = 10}, \texttt{y = 50}。
+
+\begin{enumerate}
+    \item \textbf{检查第一个条件}：\texttt{x ** 2 > 100}
+    \begin{itemize}
+        \item 计算 $10^2 = 100$。
+        \item 判断 $100 > 100$。
+        \item 结果为 \textbf{\texttt{False}}（因为 100 等于 100，并不大于 100）。
+    \end{itemize}
+    \item \textbf{整体判定}：
+    \begin{itemize}
+        \item 既然第一个条件已经失败 (\texttt{False})，无论 \texttt{y < 100} 是否成立，整个 \texttt{if} 条件都判定为 \textbf{\texttt{False}}。
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+\textbf{执行结果：}
+\begin{itemize}
+    \item 由于 \texttt{if} 条件不成立，内部的 \texttt{print(x, y)} 语句**永远不会被执行**。
+    \item 控制台不会输出任何内容。
+\end{itemize}
+
+\tcbline
+
+\textbf{结论：} 
+该代码运行后没有输出。在选择题语境下，表示“无输出”或“没有执行”的选项通常标记为 \textbf{None}。故正确答案是 \textbf{C}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 39: Nested Loops with continue
+% ==================================================
+\item What is the value of the variable \texttt{var} after the for loop completes its execution? \textbf{A}
+\begin{lstlisting}
+var = 10
+for i in range(10):
+    for j in range(2, 10, 1):
+        if var % 2 == 0:
+            continue
+            var += 1
+    var += 1
+
+print(var)
+\end{lstlisting}
+
+A. 20 \quad B. 21 \quad C. 10 \quad D. 30
+
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 \textbf{循环结构}、\textbf{\texttt{continue} 关键字} 以及 \textbf{代码缩进（不可达代码）} 的综合理解。
+
+\begin{itemize}
+    \item \textbf{\texttt{continue} 的作用}：一旦执行到 \texttt{continue}，程序会立即跳过当前循环体中剩余的所有语句，直接进入下一次循环迭代。
+    \item \textbf{不可达代码 (Unreachable Code)}：在 \texttt{continue} 之后的同一缩进层级的代码永远不会被执行。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑分析：}
+\begin{enumerate}
+    \item \textbf{初始化}：\texttt{var = 10}。
+    \item \textbf{外层循环}：运行 10 次（\texttt{i} 从 0 到 9）。
+    \item \textbf{内层循环}：运行 8 次（\texttt{j} 从 2 到 9）。
+    \item \textbf{关键条件判断}：
+    \begin{itemize}
+        \item 初始时 \texttt{var = 10}。在内层循环中，\texttt{var \% 2 == 0} 成立。
+        \item 执行 \texttt{continue}。
+        \item \textbf{注意}：原本打算执行的 \texttt{var += 1}（在 \texttt{continue} 下方）被永远跳过了。
+        \item 因此，内层循环跑了 8 次，但对 \texttt{var} 没有任何改变。
+    \end{itemize}
+    \item \textbf{外层步进}：内层循环结束后，执行外层的 \texttt{var += 1}。
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{计算过程：}
+\begin{itemize}
+    \item 外层循环第 1 次：\texttt{var} 变为 11。
+    \item 外层循环第 2 次：内层循环中 \texttt{var \% 2 == 0} 为假（因为 11 是奇数），所以不会执行 \texttt{continue}。
+    \item \textbf{陷阱}：虽然不执行 \texttt{continue}，但由于代码逻辑，\texttt{var += 1} 依然在外层循环中执行。
+    \item \textbf{事实}：无论内层循环发生什么，\texttt{var} 每一轮外层循环只会在末尾雷打不动地增加 1。
+\end{itemize}
+
+由于外层循环共执行 \textbf{10 次}，\texttt{var} 从 10 开始，每次加 1：
+$$10 + (1 \times 10) = 20$$
+
+\tcbline
+
+\textbf{结论：} 
+变量 \texttt{var} 的最终值是 \textbf{20}。故正确答案是 \textbf{A}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 40: While Loop Termination
+% ==================================================
+\item What is the value of \texttt{x}? \textbf{D}
+\begin{lstlisting}
+x = 0
+while (x < 100):
+    x += 2
+
+print(x)
+\end{lstlisting}
+
+A. 101 \quad B. 99 \quad C. None of the above, this is an infinite loop \quad D. 100
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 \textbf{\texttt{while} 循环} 的执行逻辑以及 \textbf{循环终止条件} 的判定。
+
+\begin{itemize}
+    \item \textbf{循环逻辑}：\texttt{while} 循环会在条件（\texttt{x < 100}）为真时持续执行其内部的代码块。
+    \item \textbf{步进方式}：每次循环 \texttt{x} 都会增加 2（即 \texttt{x = x + 2}）。
+\end{itemize}
+
+\tcbline
+
+\textbf{关键执行步骤分析：}
+\begin{enumerate}
+    \item \textbf{初始状态}：\texttt{x = 0}。
+    \item \textbf{循环过程中}：\texttt{x} 会经历 \texttt{0, 2, 4, ..., 96, 98}。
+    \item \textbf{临界点判断}：
+    \begin{itemize}
+        \item 当 \texttt{x = 98} 时，条件 \texttt{98 < 100} 为 \textbf{真}，进入循环。
+        \item 执行 \texttt{x += 2}，此时 \texttt{x} 变为 \textbf{100}。
+    \end{itemize}
+    \item \textbf{终止判定}：
+    \begin{itemize}
+        \item 回到循环顶部，判断条件 \texttt{100 < 100}。
+        \item 结果为 \textbf{假 (False)}，循环立即停止。
+    \end{itemize}
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{101}：错误。步进是 2，且 101 不满足停止逻辑。
+    \item[B.] \textbf{99}：错误。步进是 2，\texttt{x} 始终为偶数。
+    \item[C.] \textbf{无尽循环}：错误。由于 \texttt{x} 在不断增加，最终一定会达到并超过 100。
+    \item[D.] \textbf{100}：\textbf{正确}。它是第一个使 \texttt{x < 100} 变为假的偶数。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+当 \texttt{x} 增加到 100 时，条件不再满足，循环退出并打印当前值。故正确答案是 \textbf{D}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 41: 
+% ==================================================
+\item What is the output of the following if statement? \textbf{}
+\begin{lstlisting}
+a, b = 12, 5
+if a + b:
+    print('True')
+else:
+    print('False')
+\end{lstlisting}
+
+A. False \quad B. True
+
+\begin{tcolorbox}[colback=purple!5!white, colframe=purple!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中 **隐式布尔转换 (Implicit Boolean Conversion)** 的原则。
+
+\begin{itemize}
+    \item \textbf{算术运算}：首先计算 \texttt{a + b} 的值。$12 + 5 = 17$。
+    \item \textbf{布尔评估}：在 \texttt{if} 语句中，Python 会自动调用 \texttt{bool()} 函数来评估表达式的真假。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑核心：}
+在 Python 中，对于数值类型：
+\begin{itemize}
+    \item \textbf{0} (整数零)、\textbf{0.0} (浮点数零) 被视为 \textbf{\texttt{False}}。
+    \item \textbf{任何非零数值}（无论是正数还是负数）都被视为 \textbf{\texttt{True}}。
+\end{itemize}
+
+
+
+\tcbline
+
+\textbf{执行流程分析：}
+\begin{enumerate}
+    \item 变量赋值：\texttt{a = 12}, \texttt{b = 5}。
+    \item 计算 \texttt{a + b} 得到 \texttt{17}。
+    \item 执行 \texttt{if 17:}。
+    \item 由于 \texttt{17} 是一个非零整数，条件评估为 \texttt{True}。
+    \item 程序执行 \texttt{if} 分支下的代码，打印字符串 \texttt{'True'}。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+该代码会进入 \texttt{if} 分支。故正确答案是 \textbf{B}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 42: Nested if-else Statement
+% ==================================================
+\item Given the nested if-else below, what will be the value of \texttt{x} when the code executed successfully? \textbf{D}
+\begin{lstlisting}
+x = 0
+a = 5
+b = 5
+if a > 0:
+    if b < 0:
+        x = x + 5
+    elif a > 5:
+        x = x + 4
+    else:
+        x = x + 3
+else:
+    x = x + 2
+print(x)
+\end{lstlisting}
+
+A. 0 \quad B. 4 \quad C. 2 \quad D. 3
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 \textbf{嵌套条件语句 (Nested if-else)} 的逻辑流向。解决这类问题的关键是看清每一层缩进对应的判断条件。
+
+\begin{itemize}
+    \item \textbf{初始化}：\texttt{x = 0, a = 5, b = 5}。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑步进分析：}
+
+\begin{enumerate}
+    \item \textbf{第一层判断}：\texttt{if a > 0:}
+    \begin{itemize}
+        \item 因为 \texttt{5 > 0} 为 \textbf{True}，程序进入外层 \texttt{if} 块。
+        \item 此时，最底部的 \texttt{else: x = x + 2} 将会被跳过，永远不会执行。
+    \end{itemize}
+    
+    \item \textbf{第二层判断（嵌套内层）}：
+    \begin{itemize}
+        \item \textbf{首先检查} \texttt{if b < 0:}
+        \begin{itemize}
+            \item 因为 \texttt{5 < 0} 为 \textbf{False}，跳过此分支。
+        \end{itemize}
+        \item \textbf{接着检查} \texttt{elif a > 5:}
+        \begin{itemize}
+            \item 因为 \texttt{5 > 5} 为 \textbf{False}，跳过此分支。
+        \end{itemize}
+        \item \textbf{进入最后的} \texttt{else:} 分支：
+        \begin{itemize}
+            \item 前两个内层条件均不满足，执行 \texttt{x = x + 3}。
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+
+\textbf{最终计算：}
+\begin{itemize}
+    \item \texttt{x} 原本是 \texttt{0}。
+    \item 执行 \texttt{x = 0 + 3}。
+    \item 最终打印结果为 \textbf{3}。
+\end{itemize}
+
+\tcbline
+
+\textbf{结论：} 
+程序精确命中了内层结构的 \texttt{else} 分支。故正确答案是 \textbf{D}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 43: for Loop with pass Statement
+% ==================================================
+\item What is the output of the following loop? \textbf{B}
+\begin{lstlisting}
+for l in 'Jhon':
+    if l == 'o':
+        pass
+    print(l, end=", ")
+\end{lstlisting}
+
+A. J, h, n, \quad B. J, h, o, n,
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{\texttt{pass}} 语句及其与 \texttt{continue} 的区别。
+
+\begin{itemize}
+    \item \textbf{\texttt{pass} 语句的本质}：\texttt{pass} 是一个 \textbf{空操作 (Null Operation)}。它被用作占位符，当语法上需要一个语句但程序不需要执行任何操作时使用。
+    \item \textbf{对执行流的影响}：执行 \texttt{pass} 之后，程序会继续按照正常的顺序执行后续的代码，**不会**跳过当前的循环迭代，也**不会**终止循环。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑步进分析：}
+
+\begin{enumerate}
+    \item \textbf{迭代 1}：\texttt{l = 'J'}。条件 \texttt{'J' == 'o'} 为假。打印 \texttt{J, }。
+    \item \textbf{迭代 2}：\texttt{l = 'h'}。条件 \texttt{'h' == 'o'} 为假。打印 \texttt{h, }。
+    \item \textbf{迭代 3}：\texttt{l = 'o'}。条件 \texttt{'o' == 'o'} 为真。
+    \begin{itemize}
+        \item 执行 \texttt{pass}（什么都不做）。
+        \item 程序继续向下执行 \texttt{print(l, end=", ")}。
+        \item 打印 \texttt{o, }。
+    \end{itemize}
+    \item \textbf{迭代 4}：\texttt{l = 'n'}。条件 \texttt{'n' == 'o'} 为假。打印 \texttt{n, }。
+\end{enumerate}
+
+\tcbline
+
+
+\textbf{关键对比：}
+\begin{itemize}
+    \item 如果使用 \textbf{\texttt{continue}}：遇到 \texttt{'o'} 时会跳过打印，输出将是 \texttt{J, h, n, }（即选项 A）。
+    \item 因为使用的是 \textbf{\texttt{pass}}：代码逻辑不受任何影响，所有的字符都会被原样打印。
+\end{itemize}
+
+\tcbline
+
+\textbf{结论：} 
+\texttt{pass} 不会阻止后续代码的执行。故正确答案是 \textbf{B}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 44: List Slice Assignment
+% ==================================================
+\item What is the output of the following list assignment? \textbf{B}
+\begin{lstlisting}
+aList = [4, 8, 12, 16]
+aList[1:4] = [20, 24, 28]
+print(aList)
+\end{lstlisting}
+
+A. [4, 20, 24, 28, 8, 12, 16] \\
+B. [4, 20, 24, 28]
+
+\begin{tcolorbox}[colback=cyan!5!white, colframe=cyan!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 列表的 \textbf{切片赋值 (Slice Assignment)} 机制。
+
+\begin{itemize}
+    \item \textbf{切片范围}：\texttt{aList[1:4]} 表示选取索引从 \texttt{1} 开始到 \texttt{4} 结束（但不包括 \texttt{4}）的元素。
+    \begin{itemize}
+        \item 索引 \texttt{1} 是 \texttt{8}
+        \item 索引 \texttt{2} 是 \texttt{12}
+        \item 索引 \texttt{3} 是 \texttt{16}
+        \item 因此，被选中的部分是 \texttt{[8, 12, 16]}。
+    \end{itemize}
+    \item \textbf{替换逻辑}：切片赋值会移除选中的部分，并用赋值号右侧的可迭代对象（本题中为 \texttt{[20, 24, 28]}）替换该位置。
+\end{itemize}
+
+\tcbline
+
+\textbf{执行过程分析：}
+\begin{enumerate}
+    \item 初始列表：\texttt{[4, 8, 12, 16]}
+    \item 确定替换区间：从索引 1 到末尾的部分 \texttt{[8, 12, 16]} 被整体“挖掉”。
+    \item 插入新内容：在被挖掉的位置填入新列表 \texttt{[20, 24, 28]}。
+    \item 最终组合：首位的 \texttt{4} 保持不变，后面紧跟新插入的三个元素。
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{[4, 20, 24, 28, 8, 12, 16]}：错误。这是在索引 1 位置执行了插入操作（如 \texttt{insert}），而不是切片替换。
+    \item[B.] \textbf{[4, 20, 24, 28]}：\textbf{正确}。旧元素被新元素完全覆盖。
+\end{enumerate}
+
+\tcbline
+
+\textbf{知识拓展：}
+如果右侧列表的长度与切片长度不等，列表的总长度会发生变化。例如，如果执行 \texttt{aList[1:4] = [100]}，结果将变为 \texttt{[4, 100]}。
+
+\tcbline
+
+\textbf{结论：} 
+切片赋值是“原地替换”行为。故正确答案是 \textbf{B}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 45: List Comprehension Order
+% ==================================================
+\item What is the output of the following list comprehension? \textbf{A}
+\begin{lstlisting}
+resList = [x+y for x in ['Hello ', 'Good '] for y in ['Dear', 'Bye']]
+print(resList)
+\end{lstlisting}
+
+A. [`Hello Dear', `Hello Bye', `Good Dear', 'Good Bye'] \\
+B. [`Hello Dear', `Good Dear', `Hello Bye', 'Good Bye']
+
+\begin{tcolorbox}[colback=purple!5!white, colframe=purple!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 \textbf{嵌套列表推导式 (Nested List Comprehension)} 的执行顺序。
+
+\begin{itemize}
+    \item \textbf{核心规则}：在列表推导式中，多个 \texttt{for} 子句的执行顺序是从左到右的，这与嵌套循环的逻辑完全一致。
+    \item \textbf{等价逻辑}：
+    代码可以转换为以下传统的嵌套循环形式：
+\begin{lstlisting}[language=Python]
+resList = []
+for x in ['Hello ', 'Good ']:      # 外层循环
+    for y in ['Dear', 'Bye']:      # 内层循环
+        resList.append(x + y)
+\end{lstlisting}
+\end{itemize}
+
+\tcbline
+
+\textbf{执行过程分析：}
+
+\begin{enumerate}
+    \item \textbf{固定外层第一个值}：\texttt{x = 'Hello '}
+    \begin{itemize}
+        \item 遍历内层第一个值：\texttt{y = 'Dear'} $\rightarrow$ \texttt{'Hello Dear'}
+        \item 遍历内层第二个值：\texttt{y = 'Bye'} $\rightarrow$ \texttt{'Hello Bye'}
+    \end{itemize}
+    \item \textbf{固定外层第二个值}：\texttt{x = 'Good '}
+    \begin{itemize}
+        \item 遍历内层第一个值：\texttt{y = 'Dear'} $\rightarrow$ \texttt{'Good Dear'}
+        \item 遍历内层第二个值：\texttt{y = 'Bye'} $\rightarrow$ \texttt{'Good Bye'}
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{正确排列}：遵循了“外层不动，内层走完”的原则。先处理完所有 \texttt{Hello} 的组合，再处理 \texttt{Good} 的组合。
+    \item[B.] \textbf{错误排列}：这是交叉排列，不符合 Python 从左至右解析 \texttt{for} 语句的顺序。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+列表推导式的顺序决定了结果的排列。故正确答案是 \textbf{A}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 46: Negative Indexing
+% ==================================================
+\item What is the output of the following list operation? \textbf{A}
+\begin{lstlisting}
+sampleList = [10, 20, 30, 40, 50]
+print(sampleList[-2])
+\end{lstlisting}
+
+A. 40 \quad B. 20 \quad C. IndexError: list index out of range
+
+\begin{tcolorbox}[colback=yellow!5!white, colframe=yellow!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 列表中的 \textbf{负数索引 (Negative Indexing)} 机制。
+
+\begin{itemize}
+    \item \textbf{正数索引}：从左向右计数，起始索引为 \texttt{0}。
+    \item \textbf{负数索引}：从右向左计数，起始索引为 \texttt{-1}（即列表的最后一个元素）。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+对于列表 \texttt{[10, 20, 30, 40, 50]}：
+\begin{itemize}
+    \item 索引 \texttt{-1} 对应最后一个元素：\texttt{50}。
+    \item 索引 \texttt{-2} 对应倒数第二个元素：\texttt{40}。
+    \item 索引 \texttt{-3} 对应倒数第三个元素：\texttt{30}，依此类推。
+\end{itemize}
+
+
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{40}：\textbf{正确}。这是倒数第二个位置的元素。
+    \item[B.] \textbf{20}：错误。这是正数索引 \texttt{1} 对应的元素。
+    \item[C.] \textbf{IndexError}：错误。只要索引的绝对值不超过列表长度，负数索引就是合法的。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+\texttt{sampleList[-2]} 访问的是倒数第二个元素。故正确答案是 \textbf{A}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 47: List Slicing with Step
+% ==================================================
+\item What is the output of the following list operation? \textbf{A}
+\begin{lstlisting}
+sampleList = [10, 20, 30, 40, 50]
+print(sampleList[-4:-1])
+\end{lstlisting}
+
+A. [20, 30, 40] \quad B. [40, 30, 20] \quad C. IndexError: list index out of range
+
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!60!black, title=详细解答, enhanced, breakable]
+这道题结合了 \textbf{负数索引 (Negative Indexing)} 和 \textbf{切片 (Slicing)} 两个核心知识点。
+
+\begin{itemize}
+    \item \textbf{切片语法}：\texttt{list[start:stop:step]}。
+    \begin{itemize}
+        \item \texttt{start}：切片开始的位置（包含）。
+        \item \texttt{stop}：切片结束的位置（不包含）。
+        \item \texttt{step}：默认为 \texttt{1}，表示从左向右提取。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+对于列表 \texttt{[10, 20, 30, 40, 50]}，我们先标定负数索引的位置：
+
+
+
+\begin{enumerate}
+    \item \textbf{起始点 (\texttt{start = -4})}：对应元素 \textbf{20}。
+    \item \textbf{终止点 (\texttt{stop = -1})}：对应元素 \textbf{50}。注意，切片是“左闭右开”的，所以不包含 \texttt{-1} 位置的 \texttt{50}。
+    \item \textbf{步长 (\texttt{step})}：由于没有指定，默认为 \texttt{1}，即向右移动。
+\end{enumerate}
+
+从 \texttt{-4} 位置开始，向右提取到 \texttt{-1} 之前，结果为：\texttt{[20, 30, 40]}。
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{[20, 30, 40]}：\textbf{正确}。符合从索引 \texttt{-4} 到 \texttt{-1} 的提取逻辑。
+    \item[B.] \textbf{[40, 30, 20]}：错误。这通常出现在步长为 \texttt{-1}（逆序）时，但本题步长为正。
+    \item[C.] \textbf{IndexError}：错误。切片操作在 Python 中非常鲁棒，即便索引越界通常也只返回空列表，而不会抛出错误。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+该切片选取了列表的第 2、3、4 个元素。故正确答案是 \textbf{A}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 48: Deleting List Elements 看一下
+% ==================================================
+\item What is the output of the following code? \textbf{A}
+\begin{lstlisting}
+sampleList = [10, 20, 30, 40]
+del sampleList[0:6]
+print(sampleList)
+\end{lstlisting}
+
+A. [ ] \quad B. list index out of range \quad C. [10, 20]
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中 \textbf{\texttt{del}} 关键字配合 \textbf{切片 (Slicing)} 时的行为，以及 Python 对 \textbf{切片索引越界} 的处理机制。
+
+\begin{itemize}
+    \item \textbf{\texttt{del} 的作用}：用于删除对象。当作用于列表切片时，它会从原列表中移除该切片覆盖的所有元素。
+    \item \textbf{切片的鲁棒性}：在 Python 中，切片索引（如 \texttt{0:6}）即使超出了列表的实际长度（本例长度为 4），程序**不会报错**，而是会自动处理为“到列表末尾为止”。
+\end{itemize}
+
+\tcbline
+
+\textbf{执行过程分析：}
+
+
+
+\begin{enumerate}
+    \item \textbf{初始列表}：\texttt{sampleList = [10, 20, 30, 40]}，索引范围为 \texttt{0} 到 \texttt{3}。
+    \item \textbf{切片解析}：\texttt{sampleList[0:6]} 尝试获取索引从 \texttt{0} 到 \texttt{5} 的元素。
+    \item \textbf{边界处理}：由于列表在索引 \texttt{3} 处就结束了，Python 会将切片实际识别为 \texttt{[10, 20, 30, 40]}（即整个列表）。
+    \item \textbf{执行删除}：\texttt{del} 指令将这部分内容全部移除。
+\end{enumerate}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{[ ]}：\textbf{正确}。整个列表的元素都在切片范围内，被全部清空，留下一个空列表。
+    \item[B.] \textbf{list index out of range}：错误。这是普通索引（如 \texttt{sampleList[6]}）会抛出的错误，但切片操作永远不会因为越界而报错。
+    \item[C.] \textbf{[10, 20]}：错误。这没有任何逻辑依据，除非切片范围是 \texttt{2:4}。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+\texttt{del} 配合越界切片会清空所有匹配到的元素。故正确答案是 \textbf{A}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 49: 
+% ==================================================
+\item What is the output of the following list function? \textbf{B}
+\begin{lstlisting}
+sampleList = [10, 20, 30, 40, 50]
+sampleList.append(60)
+print(sampleList)
+\end{lstlisting}
+
+A. [10, 20, 30, 40, 50] \quad B. [10, 20, 30, 40, 50, 60]
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 列表（list）最常用的内置方法之一：\textbf{\texttt{append()}}。
+
+\begin{itemize}
+    \item \textbf{\texttt{append()} 的功能}：将一个对象（作为单个元素）添加到列表的 \textbf{末尾 (End)}。
+    \item \textbf{原地修改 (In-place)}：\texttt{append()} 方法会直接修改原始列表，而不返回新列表。
+\end{itemize}
+
+\tcbline
+
+\textbf{执行过程分析：}
+\begin{enumerate}
+    \item \textbf{初始状态}：\texttt{sampleList} 包含 5 个元素 \texttt{[10, 20, 30, 40, 50]}。
+    \item \textbf{执行操作}：调用 \texttt{sampleList.append(60)}。
+    \item \textbf{结果}：数字 \texttt{60} 被放置在索引 \texttt{5} 的位置（紧跟在 \texttt{50} 之后）。
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{[10, 20, 30, 40, 50]}：错误。这表示列表没有发生变化，忽略了 \texttt{append} 的作用。
+    \item[B.] \textbf{[10, 20, 30, 40, 50, 60]}：\textbf{正确}。列表长度从 5 增加到了 6，且新元素位于末尾。
+\end{enumerate}
+
+\tcbline
+
+\textbf{知识拓展：}
+如果要一次性添加多个元素（合并列表），应使用 \texttt{extend()} 方法。如果此时执行的是 \texttt{sampleList.append([70, 80])}，结果会变成 \texttt{[..., 60, [70, 80]]}，即将整个子列表作为一个元素添加。
+
+\tcbline
+
+\textbf{结论：} 
+\texttt{append()} 始终在末尾追加元素。故正确答案是 \textbf{B}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 50: List Slicing with Start and End
+% ==================================================
+\item What is the output of the following list operation? \textbf{D}
+\begin{lstlisting}
+aList = [10, 20, 30, 40, 50, 60, 70, 80]
+print(aList[2:5])
+\end{lstlisting}
+
+A. [20, 30, 40, 50] \quad
+B. [10, 20, 30, 40] \quad
+C. [30, 40, 50, 60, 70, 80] \quad
+D. [30, 40, 50]
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 列表的 **标准切片 (Standard Slicing)** 操作。
+
+\begin{itemize}
+    \item \textbf{切片语法}：\texttt{aList[start:stop]}。
+    \item \textbf{包含规则}：
+    \begin{itemize}
+        \item \texttt{start} (索引 2)：**包含**起始位置的元素。
+        \item \texttt{stop} (索引 5)：**不包含**结束位置的元素（即取到 \texttt{stop-1} 为止）。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+对于列表 \texttt{[10, 20, 30, 40, 50, 60, 70, 80]}：
+
+
+
+\begin{enumerate}
+    \item \textbf{定位索引 0}：\texttt{10}
+    \item \textbf{定位索引 1}：\texttt{20}
+    \item \textbf{起始位置 (索引 2)}：元素是 \textbf{30}（从这里开始提取）。
+    \item \textbf{中间元素 (索引 3)}：元素是 \textbf{40}。
+    \item \textbf{中间元素 (索引 4)}：元素是 \textbf{50}。
+    \item \textbf{终止位置 (索引 5)}：元素是 \texttt{60}（**不包含**此元素，在此处停止）。
+\end{enumerate}
+
+提取出的元素序列为：\texttt{[30, 40, 50]}。
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{[20, 30, 40, 50]}：错误。这是从索引 1 开始的结果。
+    \item[B.] \textbf{[10, 20, 30, 40]}：错误。这是从索引 0 开始且长度为 4 的结果。
+    \item[C.] \textbf{[30, ... , 80]}：错误。这是忽略了 \texttt{stop} 参数的结果。
+    \item[D.] \textbf{[30, 40, 50]}：\textbf{正确}。严格符合索引 2 到 4 的范围。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+切片遵循“左闭右开”原则。故正确答案是 \textbf{D}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 51: List Slicing from Start
+% ==================================================
+\item What is the output of the following list operation? \textbf{B}
+\begin{lstlisting}
+aList = [10, 20, 30, 40, 50, 60, 70, 80]
+print(aList[:4])
+\end{lstlisting}
+
+A. [20, 30, 40, 50] \\
+B. [10, 20, 30, 40] \\
+C. [30, 40, 50, 60, 70, 80] \\
+D. [30, 40, 50] \\
+E。 [40, 50, 60, 70, 80]
+
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 列表切片中 **省略起始索引 (Omitted Start Index)** 的默认行为。
+
+\begin{itemize}
+    \item \textbf{切片语法}：\texttt{aList[start:stop]}。
+    \item \textbf{默认值规则}：
+    \begin{itemize}
+        \item 如果 \texttt{start} 被省略（如 \texttt{[:4]}），Python 默认从索引 \textbf{0}（即列表的开头）开始提取。
+        \item \texttt{stop} (索引 4)：依然遵循“左闭右开”原则，即**不包含**索引为 4 的元素。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+对于列表 \texttt{[10, 20, 30, 40, 50, 60, 70, 80]}：
+
+
+
+\begin{enumerate}
+    \item \textbf{确定起始点}：由于冒号左侧为空，从索引 \textbf{0} 开始 $\rightarrow$ 元素为 \textbf{10}。
+    \item \textbf{确定终止点}：停止于索引 \textbf{4}（对应元素 50），但不包含它。
+    \item \textbf{提取区间}：提取索引 0, 1, 2, 3 对应的元素。
+\end{enumerate}
+
+提取出的元素序列为：\texttt{[10, 20, 30, 40]}。
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{[20, 30, 40, 50]}：错误。这是索引从 1 到 5 的结果。
+    \item[B.] \textbf{[10, 20, 30, 40]}：\textbf{正确}。从头开始取 4 个元素。
+    \item[C.] \textbf{[30, 40, 50, 60, 70, 80]}：错误。这是省略结束索引且从索引 2 开始的结果。
+    \item[D.] \textbf{[30, 40, 50]}：错误。这是上道题（2:5）的结果。
+    \item[E.] \textbf{[40, 50, 60, 70, 80]}：错误。这是从索引 3 开始到结束的结果。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+\texttt{[:n]} 的快捷含义是“获取列表的前 $n$ 个元素”。故正确答案是 \textbf{B}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 52: List Slicing to End
+% ==================================================
+\item What is the output of the following list operation? \textbf{D}
+\begin{lstlisting}
+aList = [10, 20, 30, 40, 50, 60, 70, 80]
+print(aList[3:])
+\end{lstlisting}
+
+A. [20, 30, 40, 50] \\
+B. [30, 40, 50, 60, 70, 80] \\
+C. [10, 20, 30, 40] \\
+D. [40, 50, 60, 70, 80]
+
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 列表切片中 **省略结束索引 (Omitted Stop Index)** 的默认行为。
+
+\begin{itemize}
+    \item \textbf{切片语法}：\texttt{aList[start:stop]}。
+    \item \textbf{默认值规则}：
+    \begin{itemize}
+        \item \textbf{起始位置 (start)}：本题为 \texttt{3}，即从索引为 3 的元素开始（包含该元素）。
+        \item \textbf{结束位置 (stop)}：如果冒号右侧被省略（如 \texttt{[3:]}），Python 默认提取到列表的 \textbf{最后一个元素（包含末尾）}。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+对于列表 \texttt{[10, 20, 30, 40, 50, 60, 70, 80]}：
+
+
+
+\begin{enumerate}
+    \item \textbf{定位索引 0, 1, 2}：分别是 \texttt{10, 20, 30}。
+    \item \textbf{确定起始点 (索引 3)}：对应的元素是 \textbf{40}。
+    \item \textbf{确定范围}：由于没有指定终止索引，切片会从 \texttt{40} 开始，一直抓取到列表末尾的 \texttt{80}。
+\end{enumerate}
+
+提取出的元素序列为：\texttt{[40, 50, 60, 70, 80]}。
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{[20, 30, 40, 50]}：错误。这是 \texttt{aList[1:5]} 的结果。
+    \item[B.] \textbf{[30, 40, 50, 60, 70, 80]}：错误。这是从索引 2 开始的结果 (\texttt{aList[2:]})。
+    \item[C.] \textbf{[10, 20, 30, 40]}：错误。这是获取前 4 个元素的结果 (\texttt{aList[:4]})。
+    \item[D.] \textbf{[40, 50, 60, 70, 80]}：\textbf{正确}。从索引 3 开始取到末尾。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+\texttt{aList[n:]} 的含义是“获取从索引 $n$ 到最后的所有元素”。故正确答案是 \textbf{D}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 53: max() with Strings
+% ==================================================
+\item What is the output of the following code? \textbf{B}
+\begin{lstlisting}
+list1 = ['xyz', 'zara', 'Beijing-Dublin']
+print(max(list1))
+\end{lstlisting}
+
+A. Beijing-Dublin \quad
+B. zara \quad
+C. xyz
+
+\begin{tcolorbox}[colback=purple!5!white, colframe=purple!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 内置函数 \textbf{\texttt{max()}} 作用于字符串列表时的比较逻辑。
+
+\begin{itemize}
+    \item \textbf{比较原则}：当 \texttt{max()} 用于字符串时，它不是比较字符串的长度，而是按照 \textbf{字典序 (Lexicographical Order)} 进行比较。
+    \item \textbf{底层机制}：Python 会逐个字符地比较字符串的 \textbf{Unicode 编码值}（即 \texttt{ord()} 函数返回的数值）。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+我们来比较列表中三个字符串的首字母：
+\begin{enumerate}
+    \item \texttt{'xyz'} 的首字母是 \textbf{'x'} (Unicode: 120)
+    \item \texttt{'zara'} 的首字母是 \textbf{'z'} (Unicode: 122)
+    \item \texttt{'Beijing-Dublin'} 的首字母是 \textbf{'B'} (Unicode: 66)
+\end{enumerate}
+
+
+
+\textbf{判定过程：}
+\begin{itemize}
+    \item 首先，大写字母的编码值小于小写字母，所以 \texttt{'Beijing-Dublin'} 排在最前面（最小）。
+    \item 接着比较 \texttt{'x'} 和 \texttt{'z'}。在字母表中，\texttt{'z'} 出现在 \texttt{'x'} 之后，因此其编码值更大。
+    \item 既然 \texttt{'z'} 是最大的首字母，\texttt{'zara'} 就是这组字符串中字典序最大的元素。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{Beijing-Dublin}：错误。它虽然包含最多字符（长度最长），但首字母 'B' 的 Unicode 值最小。
+    \item[B.] \textbf{zara}：\textbf{正确}。首字母 'z' 的字典序最大。
+    \item[C.] \textbf{xyz}：错误。'x' 小于 'z'。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+字符串比较看重的是字符编码顺序而非长度。故正确答案是 \textbf{B}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 54: String Multiplication and len()
+% ==================================================
+\item What is the output of the following? \textbf{A}
+\begin{lstlisting}
+l = ["a"] * 10
+print(len(l))
+\end{lstlisting}
+
+A. 10 \quad B. 0 \quad C. Syntax Error
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 列表的 \textbf{乘法运算符 (\texttt{*})}，即 \textbf{重复 (Repetition)} 操作。
+
+\begin{itemize}
+    \item \textbf{列表重复}：当列表与整数 $n$ 相乘时，Python 会创建一个新列表，其中包含原列表元素的 $n$ 次重复。
+    \item \textbf{\texttt{len()} 函数}：用于返回对象中元素的个数。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+\begin{enumerate}
+    \item \textbf{初始化}：原列表为 \texttt{["a"]}，长度为 1。
+    \item \textbf{执行乘法}：\texttt{["a"] * 10}。
+    \begin{itemize}
+        \item 结果为 \texttt{['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a']}。
+    \end{itemize}
+    \item \textbf{计算长度}：\texttt{len(l)} 统计该列表中的元素总数，结果自然为 10。
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{10}：\textbf{正确}。原列表的一个元素被重复了 10 次。
+    \item[B.] \textbf{0}：错误。列表不为空。
+    \item[C.] \textbf{Syntax Error}：错误。列表乘法是 Python 合法且常用的语法。
+\end{enumerate}
+
+\tcbline
+
+\textbf{注意陷阱}：
+如果是 \texttt{l = "a" * 10}（字符串乘以 10），其长度同样是 10。但如果原列表包含多个元素，例如 \texttt{[1, 2] * 3}，结果会是 \texttt{[1, 2, 1, 2, 1, 2]}，长度则为 6。
+
+\tcbline
+
+\textbf{结论}：
+乘法操作扩展了列表的规模。故正确答案是 \textbf{A}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 55: Joining Two Lists
+% ==================================================
+\item Select all the correct options to join two lists in Python: \textbf{A, C}
+\begin{lstlisting}
+listOne = ['a', 'b', 'c', 'd']
+listTwo = ['e', 'f', 'g']
+\end{lstlisting}
+
+A. \texttt{newList = listOne + listTwo} \\
+B. \texttt{newList = listOne * listTwo} \\
+C. \texttt{newList = listOne.extend(listTwo)} \\
+D. \texttt{newList.extend(listOne, listTwo)}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中合并两个列表的不同方法以及它们的返回值特性。
+
+\begin{itemize}
+    \item \textbf{运算符重载 (\texttt{+})}：用于合并两个列表并返回一个包含两者元素的新列表。
+    \item \textbf{\texttt{extend()} 方法}：用于将一个列表中的所有元素添加到另一个列表的末尾。这是一个 \textbf{原地 (In-place)} 修改操作。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项逐一分析：}
+
+\begin{enumerate}
+    \item[A.] \textbf{\texttt{newList = listOne + listTwo}}：
+    \begin{itemize}
+        \item \textbf{正确}。这是合并列表最直观的方法。它不修改原有的 \texttt{listOne}，而是产生一个新的对象 \texttt{newList}。
+    \end{itemize}
+
+    \item[B.] \textbf{\texttt{newList = listOne * listTwo}}：
+    \begin{itemize}
+        \item \textbf{错误}。列表不支持“乘法”运算（除非第二个操作数是整数，表示重复）。两个列表相乘会抛出 \texttt{TypeError}。
+    \end{itemize}
+
+    \item[C.] \textbf{\texttt{listOne.extend(listTwo)}}：
+    \begin{itemize}
+        \item \textbf{技术性正确 (但需注意赋值陷阱)}。题干问的是“join two lists”的方法。使用 \texttt{listOne.extend(listTwo)} 确实成功地将两个列表合并到了 \texttt{listOne} 中。
+        \item \textbf{注意}：代码中写作 \texttt{newList = listOne.extend(listTwo)} 是一个常见错误，因为 \texttt{extend()} 返回 \texttt{None}。所以虽然“合并”成功了，但 \texttt{newList} 的值会是 \texttt{None}。
+    \end{itemize}
+
+    \item[D.] \textbf{\texttt{newList.extend(listOne, listTwo)}}：
+    \begin{itemize}
+        \item \textbf{错误}。\texttt{extend()} 方法仅接收一个参数（一个可迭代对象）。同时，如果 \texttt{newList} 尚未定义，会抛出 \texttt{NameError}。
+    \end{itemize}
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{结论：} 
+选项 A 是创建新列表的标准做法，选项 C 是原地扩展的标准做法。故正确答案是 \textbf{A, C}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 56: List Mutability
+% ==================================================
+\item In Python, list is mutable: \textbf{B}
+
+A. False \quad B. True
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 数据结构中最核心的概念之一：\textbf{可变性 (Mutability)}。
+
+\begin{itemize}
+    \item \textbf{可变对象 (Mutable)}：在创建后，其内部状态或内容可以被修改，而无需创建新对象。
+    \item \textbf{不可变对象 (Immutable)}：一旦创建，其内容就不能更改。如果尝试修改，Python 会创建一个新的对象。
+\end{itemize}
+
+\tcbline
+
+\textbf{知识点拆解：}
+
+\begin{enumerate}
+    \item \textbf{列表的特性}：列表（\texttt{list}）是典型的 \textbf{可变对象}。你可以执行以下操作而保持对象的 ID（内存地址）不变：
+    \begin{itemize}
+        \item 修改单个元素：\texttt{L[0] = 99}
+        \item 添加元素：\texttt{L.append(4)}
+        \item 删除元素：\texttt{del L[1]}
+    \end{itemize}
+    \item \textbf{对比不可变对象}：
+    \begin{itemize}
+        \item \textbf{数字} (int, float), \textbf{字符串} (str), \textbf{元组} (tuple) 都是不可变的。
+    \end{itemize}
+\end{enumerate}
+
+
+
+\tcbline
+
+
+\textbf{结论：} 
+这是一个基础概念题。列表（List）、字典（Dict）和集合（Set）是 Python 的三大主要可变类型。
+\end{tcolorbox}
+
+% ==================================================
+% Question 57: pop() without Index
+% ==================================================
+\item What is the output of the following list function? \textbf{B}
+\begin{lstlisting}
+sampleList = [10, 20, 30, 40, 50]
+sampleList.pop()
+print(sampleList)
+\end{lstlisting}
+
+A. [20, 30, 40, 50] \quad
+B. [10, 20, 30, 40] \quad
+C. [10, 20, 30, 40]
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 列表（list）的内置方法 \textbf{\texttt{pop()}} 的默认行为。
+
+\begin{itemize}
+    \item \textbf{\texttt{pop()} 的定义}：用于移除列表中的一个元素，并返回该元素的值。
+    \item \textbf{默认索引}：如果调用时没有传递参数（即空括号 \texttt{()}），它默认移除并返回列表中的 \textbf{最后一个元素}（索引为 \texttt{-1}）。
+\end{itemize}
+
+\tcbline
+
+\textbf{执行过程分析：}
+\begin{enumerate}
+    \item \textbf{初始列表}：\texttt{sampleList = [10, 20, 30, 40, 50]}。
+    \item \textbf{执行 \texttt{pop()}}：
+    \begin{itemize}
+        \item Python 定位到列表末尾的元素 \texttt{50}。
+        \item 将其从内存中从列表中移除。
+    \end{itemize}
+    \item \textbf{打印结果}：列表现在只剩下前四个元素 \texttt{[10, 20, 30, 40]}。
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{知识拓展：}
+\begin{itemize}
+    \item 如果你想移除特定的元素，可以传递索引，例如 \texttt{sampleList.pop(0)} 会移除并返回 \texttt{10}。
+    \item \textbf{对比 \texttt{remove()}}：\texttt{remove(x)} 是根据 \textbf{值} 来删除（删除第一个匹配到的值），而 \texttt{pop(i)} 是根据 \textbf{索引} 来删除。
+\end{itemize}
+
+\tcbline
+
+\textbf{结论：} 
+不带参数的 \texttt{pop()} 相当于 \texttt{pop(-1)}。故正确答案是 \textbf{B}（注意选项 C 与 B 内容一致，通常选择第一个匹配的正确项）。
+\end{tcolorbox}
+
+% ==================================================
+% Question 58: pop() with Index
+% ==================================================
+\item What is the output of the following list function? \textbf{B}
+\begin{lstlisting}
+sampleList = [10, 20, 30, 40, 50]
+sampleList.pop(2)
+print(sampleList)
+\end{lstlisting}
+
+A. [10, 20, 30, 40, 50] \quad
+B. [10, 20, 40, 50] \quad
+C. [10, 20, 30, 40] \quad
+D. [10, 20, 30, 50]
+
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 \textbf{\texttt{pop()}} 方法在指定 \textbf{索引 (Index)} 时的行为。
+
+\begin{itemize}
+    \item \textbf{\texttt{pop(index)}}：移除并返回列表中指定索引位置的元素。
+    \item \textbf{索引规则}：Python 的索引从 \texttt{0} 开始计数。
+\end{itemize}
+
+\tcbline
+
+\textbf{执行过程分析：}
+对于列表 \texttt{[10, 20, 30, 40, 50]}：
+
+
+
+\begin{enumerate}
+    \item \textbf{定位索引}：
+    \begin{itemize}
+        \item 索引 \texttt{0}: \texttt{10}
+        \item 索引 \texttt{1}: \texttt{20}
+        \item \textbf{索引 \texttt{2}: \texttt{30}} $\leftarrow$ 这是被选中的目标。
+    \end{itemize}
+    \item \textbf{执行删除}：调用 \texttt{sampleList.pop(2)} 会将元素 \texttt{30} 从列表中永久移除。
+    \item \textbf{后续移动}：原本在索引 \texttt{3} 和 \texttt{4} 的元素（\texttt{40} 和 \texttt{50}）会向左移动，填补空位。
+\end{enumerate}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{[10, 20, 30, 40, 50]}：错误。这是没有执行任何删除操作的原列表。
+    \item[B.] \textbf{[10, 20, 40, 50]}：\textbf{正确}。元素 \texttt{30}（索引 2）已被移除。
+    \item[C.] \textbf{[10, 20, 30, 40]}：错误。这是执行了 \texttt{pop()}（默认末尾）的结果。
+    \item[D.] \textbf{[10, 20, 30, 50]}：错误。这是移除了索引 \texttt{3}（元素 \texttt{40}）的结果。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+\texttt{pop(2)} 指向的是列表中的第三个元素。故正确答案是 \textbf{B}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 59: 
+% ==================================================
+\item What is the output of the following code? \textbf{B}
+\begin{lstlisting}
+aList = ["Beijing-Dublin", [4, 8, 12, 16]]
+print(aList[0][1])
+\end{lstlisting}
+
+A. \texttt{B} \\
+B. \texttt{e} \\
+C. \texttt{i} \\
+D. \texttt{j}
+
+\begin{tcolorbox}[colback=cyan!5!white, colframe=cyan!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{多维索引 (Multi-dimensional Indexing)}，即如何访问嵌套在列表中的序列元素。
+
+\begin{itemize}
+    \item \textbf{第一层索引 \texttt{aList[0]}}：获取列表中的第一个元素。在本例中，第一个元素是字符串 \texttt{"Beijing-Dublin"}。
+    \item \textbf{第二层索引 \texttt{[1]}}：在第一层获取到的字符串基础上，获取该字符串中索引为 \texttt{1} 的字符。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+
+\begin{enumerate}
+    \item \textbf{定位 \texttt{aList[0]}}：
+    \begin{itemize}
+        \item \texttt{aList} 是 \texttt{["Beijing-Dublin", [4, 8, 12, 16]]}。
+        \item 索引 \texttt{0} 指向字符串 \texttt{"Beijing-Dublin"}。
+    \end{itemize}
+    \item \textbf{定位字符串内部索引}：
+    对于字符串 \texttt{"Beijing-Dublin"}，其索引分布如下：
+    \begin{itemize}
+        \item 索引 \texttt{0} : \texttt{B}
+        \item \textbf{索引 \texttt{1} : \texttt{e}} $\leftarrow$ 目标字符
+        \item 索引 \texttt{2} : \texttt{i}
+        \item 索引 \texttt{3} : \texttt{j}
+    \end{itemize}
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{B}：这是 \texttt{aList[0][0]}。
+    \item[B.] \textbf{e}：\textbf{正确}。它是字符串中第二个字符。
+    \item[C.] \textbf{i}：这是 \texttt{aList[0][2]}。
+    \item[D.] \textbf{j}：这是 \texttt{aList[0][3]}。
+\end{enumerate}
+
+\tcbline
+
+\textbf{知识拓展：}
+如果我们要访问嵌套列表里的数字 \texttt{8}，代码应该是 \texttt{aList[1][1]}。
+
+\tcbline
+
+\textbf{结论：} 
+连续索引是按照从外向里的顺序解析的。故正确答案是 \textbf{B}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 60: 
+% ==================================================
+\item What is the output of the following code? \textbf{C}
+\begin{lstlisting}
+aList = ["Beijing-Dublin", [4, 8, 12, 16]]
+print(aList[1][3])
+\end{lstlisting}
+
+A. \texttt{8} \\
+B. \texttt{12} \\
+C. \texttt{16} \\
+D. \texttt{4}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中对 \textbf{嵌套列表 (Nested List)} 的访问能力，即通过多级索引获取内部序列的值。
+
+\begin{itemize}
+    \item \textbf{第一层索引 \texttt{aList[1]}}：获取外层列表中的第二个元素。在本例中，索引 \texttt{0} 是字符串，索引 \texttt{1} 是子列表 \texttt{[4, 8, 12, 16]}。
+    \item \textbf{第二层索引 \texttt{[3]}}：在获取到的子列表内部，提取索引为 \texttt{3} 的元素。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+
+\begin{enumerate}
+    \item \textbf{定位外层索引}：
+    \begin{itemize}
+        \item \texttt{aList[0]} $\rightarrow$ \texttt{"Beijing-Dublin"}
+        \item \texttt{aList[1]} $\rightarrow$ \texttt{[4, 8, 12, 16]}
+    \end{itemize}
+    \item \textbf{定位子列表内部索引}：
+    针对子列表 \texttt{[4, 8, 12, 16]}，其索引分布如下：
+    \begin{itemize}
+        \item 索引 \texttt{0} : \texttt{4}
+        \item 索引 \texttt{1} : \texttt{8}
+        \item 索引 \texttt{2} : \texttt{12}
+        \item \textbf{索引 \texttt{3} : \texttt{16}} $\leftarrow$ 目标数值
+    \end{itemize}
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{8}：这是 \texttt{aList[1][1]}。
+    \item[B.] \textbf{12}：这是 \texttt{aList[1][2]}。
+    \item[C.] \textbf{16}：\textbf{正确}。它是子列表中索引为 3 的元素。
+    \item[D.] \textbf{4}：这是 \texttt{aList[1][0]}。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+通过 \texttt{aList[1][3]}，我们成功进入了嵌套列表并取到了最后一个整数。故正确答案是 \textbf{C}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 61: 
+% ==================================================
+\item What is the output of the following: \textbf{C}
+\begin{lstlisting}
+aList = [5, 10, 15, 25]
+print(aList[::-2])
+\end{lstlisting}
+
+A. \texttt{[15, 10, 5]} \\
+B. \texttt{[10, 5]} \\
+C. \texttt{[25, 10]}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 列表的 \textbf{切片 (Slicing)} 操作，特别是带有 \textbf{负数步长 (Negative Step)} 的用法。
+
+\begin{itemize}
+    \item \textbf{语法结构 \texttt{list[start:stop:step]}}：在本例中，\texttt{start} 和 \texttt{stop} 都被省略了。
+    \item \textbf{步长 \texttt{-2}}：步长为负数时，切片会从右向左（反向）进行提取。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+
+\begin{enumerate}
+    \item \textbf{确定起始点}：
+    当步长为负数且未指定 \texttt{start} 时，默认从列表的 \textbf{最后一个元素} 开始。
+    \begin{itemize}
+        \item 当前列表末尾元素为 \texttt{25} (索引 3)。
+    \end{itemize}
+    \item \textbf{执行跳步逻辑}：
+    \begin{itemize}
+        \item \textbf{第 1 个提取值}：索引 \texttt{3} $\rightarrow$ \texttt{25}
+        \item \textbf{第 2 个提取值}：跳过一个元素（索引 \texttt{2}），移动到索引 \texttt{3 - 2 = 1} $\rightarrow$ \texttt{10}
+        \item \textbf{终止条件}：继续移动会超出列表起始边界，提取停止。
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{[15, 10, 5]}：这是 \texttt{aList[2::-1]} 的结果。
+    \item[B.] \textbf{[10, 5]}：这是 \texttt{aList[1::-1]} 的结果。
+    \item[C.] \textbf{[25, 10]}：\textbf{正确}。从末尾 \texttt{25} 开始反向每隔一个元素取值。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+切片 \texttt{[::-2]} 的效果是“反向取值，步长为 2”。结果构成的子列表为 \texttt{[25, 10]}。故正确答案是 \textbf{C}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 62: 
+% ==================================================
+\item What is the output of the following: \textbf{A}
+\begin{lstlisting}
+aList = [1, 2, 3, 4, 5, 6, 7]
+pow2 = [2 * x for x in aList]
+print(pow2)
+\end{lstlisting}
+
+A. \texttt{[2, 4, 6, 8, 10, 12, 14]} \\
+B. \texttt{[2, 4, 8, 16, 32, 64, 128]}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中的 \textbf{列表推导式 (List Comprehension)}。这是一种简洁的创建列表的方法，其基本语法为 \texttt{[expression for item in iterable]}。
+
+\begin{itemize}
+    \item \textbf{遍历对象 (\texttt{in aList})}：程序会依次取出 \texttt{aList} 中的每一个元素。
+    \item \textbf{操作逻辑 (\texttt{2 * x})}：对于每一个取出的元素 \texttt{x}，都会执行乘以 2 的操作。
+    \item \textbf{结果生成}：计算后的新值会被存入一个新的列表 \texttt{pow2} 中。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+
+\begin{enumerate}
+    \item \textbf{循环过程}：
+    \begin{itemize}
+        \item 当 \texttt{x = 1} 时，\texttt{2 * 1 = 2}
+        \item 当 \texttt{x = 2} 时，\texttt{2 * 2 = 4}
+        \item 当 \texttt{x = 3} 时，\texttt{2 * 3 = 6}
+        \item ……以此类推，直到最后一个元素 \texttt{7}。
+        \item 当 \texttt{x = 7} 时，\texttt{2 * 7 = 14}
+    \end{itemize}
+    \item \textbf{组合结果}：
+    最终生成的列表为 \texttt{[2, 4, 6, 8, 10, 12, 14]}。
+\end{enumerate}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{[2, 4, 6, 8, 10, 12, 14]}：\textbf{正确}。每个元素都成功乘以了 2。
+    \item[B.] \textbf{[2, 4, 8, 16, 32, 64, 128]}：这是计算 $2^x$（即 \texttt{2 ** x}）的结果。虽然变量名为 \texttt{pow2}（通常暗示幂运算），但代码中实际使用的是乘法运算符 \texttt{*}。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+题目中的代码执行的是“数值翻倍”而非“求 2 的幂”。在编程考试中，要注意区分运算符 \texttt{*} (乘法) 和 \texttt{**} (幂运算)。故正确答案是 \textbf{A}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 63: 
+% ==================================================
+\item What is the output of the following code: \textbf{B}
+\begin{lstlisting}
+my_list = ["Hello", "Python"]
+print("-".join(my_list))
+\end{lstlisting}
+
+A. \texttt{HelloPython-} \\
+B. \texttt{Hello-Python} \\
+C. \texttt{-HelloPython}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 字符串对象的方法 \textbf{\texttt{join()}}。它是处理字符串序列合并最常用的方式之一。
+
+\begin{itemize}
+    \item \textbf{方法语法 \texttt{separator.join(iterable)}}：
+    \begin{itemize}
+        \item \textbf{\texttt{separator}} (分隔符)：即代码中的 \texttt{"-"}，它将被插入到序列的元素之间。
+        \item \textbf{\texttt{iterable}} (可迭代对象)：即代码中的 \texttt{my\_list}，其内部元素必须是字符串。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+
+\begin{enumerate}
+    \item \textbf{理解连接规则}：
+    \texttt{join()} 方法会将分隔符插入到列表元素\textbf{之间}，而不是每个元素的末尾或开头。
+    \item \textbf{拼接过程}：
+    \begin{itemize}
+        \item 列表元素 1：\texttt{"Hello"}
+        \item 插入分隔符：\texttt{"-"}
+        \item 列表元素 2：\texttt{"Python"}
+        \item 最终结果 $\rightarrow$ \texttt{"Hello-Python"}
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{HelloPython-}：错误。分隔符不会出现在结果字符串的末尾。
+    \item[B.] \textbf{Hello-Python}：\textbf{正确}。分隔符完美地连接了两个单词。
+    \item[C.] \textbf{-HelloPython}：错误。分隔符不会出现在结果字符串的开头。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+\texttt{join()} 方法的核心逻辑是“将分隔符放置在元素之间”。如果列表中只有一个元素，则不会出现分隔符。故正确答案是 \textbf{B}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 64: 
+% ==================================================
+\item Please select all correct ways to empty the following dictionary: \textbf{C}
+\begin{lstlisting}
+student = {
+    "name": "Emma",
+    "class": 9,
+    "marks": 75
+}
+\end{lstlisting}
+
+A) \texttt{del student} \\
+B) \texttt{del student[0:2]} \\
+C) \texttt{student.clear()}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 字典 (Dictionary) 的管理操作，重点在于区分“删除整个字典对象”与“清空字典内部成员”的不同方法。
+
+\begin{itemize}
+    \item \textbf{目标}：使字典变为空字典 \texttt{\{\}}，但保留 \texttt{student} 这个变量名。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项逻辑分析：}
+
+\begin{enumerate}
+    \item \textbf{选项 A (\texttt{del student})}：
+    \begin{itemize}
+        \item \textbf{效果}：从内存中删除整个变量名 \texttt{student}。
+        \item \textbf{后果}：执行后，如果再次尝试访问 \texttt{student}，会抛出 \texttt{NameError}。这属于“销毁”而非“清空”。
+    \end{itemize}
+    
+    \item \textbf{选项 B (\texttt{del student[0:2]})}：
+    \begin{itemize}
+        \item \textbf{效果}：会引发 \texttt{TypeError}。
+        \item \textbf{原因}：字典是\textbf{无序的映射类型}（Mapping），不支持类似列表那样的切片（Slicing）操作。
+    \end{itemize}
+    
+    \item \textbf{选项 C (\texttt{student.clear()})}：
+    \begin{itemize}
+        \item \textbf{效果}：移除字典中所有的键值对（Key-Value pairs）。
+        \item \textbf{状态}：执行后，变量 \texttt{student} 依然存在，但其内容变为 \texttt{\{\}}。这是清空字典的标准方法。
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+只有 \texttt{clear()} 方法能在保留变量引用的前提下，安全且完整地移除字典内的所有数据。故正确答案是 \textbf{C}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 65: 
+% ==================================================
+\item Dictionary keys must be immutable: \textbf{A}
+
+A) True \\
+B) False
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 字典 (Dictionary) 对 \textbf{键 (Key)} 的基本约束。这是理解 Python 映射类型底层逻辑的基础。
+
+\begin{itemize}
+    \item \textbf{核心规则}：字典的键必须是 \textbf{可哈希的 (Hashable)}。
+    \item \textbf{不可变性 (Immutability)}：通常情况下，不可变对象（如字符串、数字、元组）都是可哈希的，因此可以作为键。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+
+\begin{enumerate}
+    \item \textbf{为什么要不可变？}
+    字典在底层是基于 \textbf{哈希表 (Hash Table)} 实现的。当你存储一个键值对时，Python 会计算键的哈希值来决定存储位置。如果键是可变的（例如列表），那么在其内容改变后，哈希值也会随之改变，导致无法再找到原来存储的值。
+    
+    \item \textbf{哪些可以作为键？}
+    \begin{itemize}
+        \item \textbf{合法 (不可变)}：\texttt{str}, \texttt{int}, \texttt{float}, \texttt{tuple} (且元组内元素也必须不可变), \texttt{bool}。
+        \item \textbf{非法 (可变)}：\texttt{list}, \texttt{dict}, \texttt{set}。
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{True}：\textbf{正确}。在 Python 的标准实现中，为了保证哈希值的稳定性，字典的键必须是不可变类型。
+    \item[B.] \textbf{False}：错误。如果键是可变的，会引发 \texttt{TypeError: unhashable type} 异常。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+字典键的不可变性是确保数据检索效率和准确性的关键。故正确答案是 \textbf{A}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 66: 
+% ==================================================
+\item In Python, Dictionaries are immutable: \textbf{A}
+
+A) False \\
+B) True
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是对 Python \textbf{可变对象 (Mutable)} 与 \textbf{不可变对象 (Immutable)} 的分类能力。
+
+\begin{itemize}
+    \item \textbf{核心定义}：可变对象是指在创建后，其内容可以被原地（in-place）修改，而无需创建新对象。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+
+\begin{enumerate}
+    \item \textbf{字典的特性}：
+    字典（Dictionary）是典型的\textbf{可变数据类型}。我们可以随时对字典执行以下操作：
+    \begin{itemize}
+        \item \textbf{添加}：增加新的键值对。
+        \item \textbf{修改}：更改已有键所对应的值。
+        \item \textbf{删除}：移除现有的键值对。
+    \end{itemize}
+    这些操作都会直接修改原始的字典对象，而不会改变其在内存中的地址（\texttt{id}）。
+
+    \item \textbf{易混淆点拨}：
+    很多初学者会受到“字典的\textbf{键}必须不可变”这一规则的影响，误以为字典本身也是不可变的。
+    \begin{itemize}
+        \item \textbf{键 (Keys)}：必须不可变（如字符串、数字）。
+        \item \textbf{字典本体 (Dictionary itself)}：是可变的。
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+\textbf{Python 数据类型分类表：}
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{不可变 (Immutable)} & \textbf{可变 (Mutable)} \\ \hline
+数字 (int, float) & \textbf{字典 (dict)} \\ \hline
+字符串 (str) & 列表 (list) \\ \hline
+元组 (tuple) & 集合 (set) \\ \hline
+\end{tabular}
+\end{center}
+
+\tcbline
+
+\textbf{结论：} 
+由于字典允许增删改操作，它属于可变类型。题目陈述“Dictionaries are immutable”是错误的。故正确答案是 \textbf{A}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 67: 
+% ==================================================
+\item Select the all correct way to remove the key marks from a dictionary: \textbf{AB}
+\begin{lstlisting}
+student = {
+    "name": "Emma",
+    "class": 9,
+    "marks": 75
+}
+\end{lstlisting}
+
+A) \texttt{student.pop("marks")} \\
+B) \texttt{del student["marks"]} \\
+C) \texttt{student.remove("marks")} \\
+D) \texttt{student.popitem("marks")}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 字典中删除特定 \textbf{键 (Key)} 的多种方法及其语法区别。
+
+\begin{itemize}
+    \item \textbf{目标}：从字典 \texttt{student} 中精准移除键为 \texttt{"marks"} 的键值对。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项逻辑分析：}
+
+\begin{enumerate}
+    \item \textbf{选项 A (\texttt{student.pop("marks")})}：
+    \begin{itemize}
+        \item \textbf{机制}：该方法会移除指定的键并返回其对应的值（在此例中返回 \texttt{75}）。
+        \item \textbf{结果}：键 \texttt{"marks"} 被成功删除。这是最常用的方法，因为它还能捕获被删除的数据。
+    \end{itemize}
+    
+    \item \textbf{选项 B (\texttt{del student["marks"]})}：
+    \begin{itemize}
+        \item \textbf{机制}：使用 Python 的通用删除关键字 \texttt{del} 定位到字典的具体键。
+        \item \textbf{结果}：直接从内存中删除该键值对。如果键不存在，会抛出 \texttt{KeyError}。
+    \end{itemize}
+    
+    \item \textbf{选项 C (\texttt{student.remove("marks")})}：
+    \begin{itemize}
+        \item \textbf{错误分析}：\texttt{remove()} 是 \textbf{列表 (List)} 的方法，用于删除特定的“值”。字典对象没有 \texttt{remove()} 方法，执行会报错。
+    \end{itemize}
+    
+    \item \textbf{选项 D (\texttt{student.popitem("marks")})}：
+    \begin{itemize}
+        \item \textbf{错误分析}：\texttt{popitem()} 不需要参数。在 Python 3.7+ 中，它默认删除并返回字典中的 \textbf{最后一个} 键值对（LIFO）。传入参数会导致 \texttt{TypeError}。
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+\textbf{总结：}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{方法} & \textbf{适用对象} & \textbf{特点} \\ \hline
+\texttt{pop(k)} & 字典 & 删除指定键并返回值 \\ \hline
+\texttt{del d[k]} & 字典/列表 & 通用删除指令 \\ \hline
+\texttt{remove(v)} & 列表 & 字典不可用 \\ \hline
+\texttt{popitem()} & 字典 & 无参数，删除最后一项 \\ \hline
+\end{tabular}
+\end{center}
+
+\tcbline
+
+\textbf{结论：} 
+选项 A 和 B 均能正确且有效地移除指定的键。故正确答案是 \textbf{AB}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 68: 
+% ==================================================
+\item Select the correct way to access the value of a history subject \textbf{A}
+\begin{lstlisting}
+sampleDict = {
+    "class":{
+        "student":{
+            "name":"Mike",
+            "marks":{
+                "physics":70,
+                "history":80
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+A) \texttt{sampleDict['class']['student']['marks']['history']} \\
+B) \texttt{sampleDict['class']['student']['marks'][1]} \\
+C) \texttt{sampleDict['class'][0]['marks']['history']}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中 \textbf{嵌套字典 (Nested Dictionary)} 的多级索引访问。在处理复杂的数据结构（如 JSON）时，这种逐层剥开（Peeling）的方法非常关键。
+
+\begin{itemize}
+    \item \textbf{核心原则}：字典是基于 \textbf{键 (Key)} 存储的映射类型。每一层括号 \texttt{[]} 内部都必须填入对应的键名。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑路径分析：}
+
+\begin{enumerate}
+    \item \textbf{第一层}：\texttt{sampleDict['class']} 
+    $\rightarrow$ 进入类字典，得到包含 \texttt{student} 的对象。
+    \item \textbf{第二层}：\texttt{...['student']} 
+    $\rightarrow$ 进入学生字典，得到包含 \texttt{name} 和 \texttt{marks} 的对象。
+    \item \textbf{第三层}：\texttt{...['marks']} 
+    $\rightarrow$ 进入成绩字典，得到包含具体的学科成绩。
+    \item \textbf{第四层}：\texttt{...['history']} 
+    $\rightarrow$ 最终定位到历史学科的值：\texttt{80}。
+\end{enumerate}
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{完全正确}：路径中的每一个键名都与字典结构精确对应。
+    \item[B.] \textbf{错误}：字典是无序的，不能通过整数索引（如 \texttt{[1]}）来访问其中的条目，除非字典的键本身就是整数。
+    \item[C.] \textbf{错误}：在 \texttt{'class'} 键对应的值是一个字典，而不是列表，因此不能使用索引 \texttt{[0]}。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+访问嵌套字典必须遵循“层层递进，键名匹配”的原则。故正确答案是 \textbf{A}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 69: 
+% ==================================================
+\item Select correct ways to create an empty dictionary \textbf{AB}
+
+A) \texttt{sampleDict = \{\}} \\
+B) \texttt{sampleDict = dict()} \\
+C) \texttt{sampleDict = dict\{\}}
+
+% ==================================================
+% Question 69: 
+% ==================================================
+\item Select correct ways to create an empty dictionary \textbf{AB}
+
+A) \texttt{sampleDict = \{\}} \\
+B) \texttt{sampleDict = dict()} \\
+C) \texttt{sampleDict = dict\{\}}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中初始化 \textbf{空字典 (Empty Dictionary)} 的标准语法。Python 提供了两种主要方式来完成这一操作。
+
+\begin{itemize}
+    \item \textbf{方式一：字面量语法 (Literal Syntax)}：使用大括号 \texttt{\{\}}。这是最常用且效率最高的方式。
+    \item \textbf{方式二：内置构造函数 (Constructor)}：使用 \texttt{dict()} 函数。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项逻辑分析：}
+
+\begin{enumerate}
+    \item \textbf{选项 A (\texttt{sampleDict = \{\}})}：
+    \begin{itemize}
+        \item \textbf{解析}：在 Python 中，一对空的大括号默认创建一个空字典。
+        \item \textbf{注意}：虽然集合 (Set) 也使用大括号，但空集合必须使用 \texttt{set()} 来创建，不能使用 \texttt{\{\}}，因为字典在 Python 语言设计中拥有大括号的“优先权”。
+    \end{itemize}
+    
+    \item \textbf{选项 B (\texttt{sampleDict = dict()})}：
+    \begin{itemize}
+        \item \textbf{解析}：调用内置的 \texttt{dict} 类构造器，不传递任何参数时，会返回一个新的空字典对象。
+    \end{itemize}
+    
+    \item \textbf{选项 C (\texttt{sampleDict = dict\{\}})}：
+    \begin{itemize}
+        \item \textbf{解析}：\textbf{语法错误}。在 Python 中，函数或类的调用必须使用圆括号 \texttt{()}。将类名与大括号直接连用是不符合语法规则的。
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+\textbf{知识对比：}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{数据类型} & \textbf{字面量方式} & \textbf{构造函数方式} \\ \hline
+字典 (dict) & \texttt{d = \{\}} & \texttt{d = dict()} \\ \hline
+集合 (set) & (不可用) & \texttt{s = set()} \\ \hline
+列表 (list) & \texttt{l = []} & \texttt{l = list()} \\ \hline
+\end{tabular}
+\end{center}
+
+\tcbline
+
+\textbf{结论：} 
+选项 A 和 B 均是 Python 官方认可的创建空字典的正确方式。故正确答案是 \textbf{AB}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 70: 
+% ==================================================
+\item Select the correct ways to get the value of marks key: \textbf{BD}
+\begin{lstlisting}
+Student = {
+    "name": "Emma",
+    "class": 9,
+    "marks": 75
+}
+\end{lstlisting}
+
+A) \texttt{m = student.get(2)} \\
+B) \texttt{m = student.get('marks')} \\
+C) \texttt{m = student[2])} \\
+D) \texttt{m = student['marks']}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是在 Python 字典中获取特定键对应数值的两种标准操作。字典是映射类型，必须通过 \textbf{键 (Key)} 来定位值，而不能使用索引位置。
+
+\begin{itemize}
+    \item \textbf{直接访问法}：使用方括号 \texttt{dict[key]}。
+    \item \textbf{方法访问法}：使用内置函数 \texttt{dict.get(key)}。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项逻辑分析：}
+
+\begin{enumerate}
+    \item \textbf{选项 A 和 C (\texttt{get(2)} / \texttt{student[2]})}：
+    \begin{itemize}
+        \item \textbf{解析}：这两个选项试图通过整数 \texttt{2} 来获取值。
+        \item \textbf{错误原因}：字典是无序的，不支持位置索引。在本字典中，并没有一个键的名字是整数 \texttt{2}，因此 \texttt{get(2)} 会返回 \texttt{None}，而 \texttt{student[2]} 会直接抛出 \texttt{KeyError}。
+    \end{itemize}
+    
+    \item \textbf{选项 B (\texttt{student.get('marks')})}：
+    \begin{itemize}
+        \item \textbf{解析}：\texttt{get()} 方法接收一个键作为参数。
+        \item \textbf{优点}：这是更安全的方式。如果键 \texttt{'marks'} 不存在，程序不会报错，而是返回 \texttt{None}（或自定义的默认值）。
+    \end{itemize}
+    
+    \item \textbf{选项 D (\texttt{student['marks']})}：
+    \begin{itemize}
+        \item \textbf{解析}：这是获取字典值最直接、最常用的语法。
+        \item \textbf{注意}：使用这种方式时，必须确保键 \texttt{'marks'} 确实存在于字典中，否则程序会中断并报 \texttt{KeyError}。
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+\textbf{对比总结：}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{方式} & \textbf{语法} & \textbf{若键不存在的结果} \\ \hline
+\textbf{下标访问} & \texttt{student['marks']} & 抛出异常 (KeyError) \\ \hline
+\textbf{get 方法} & \texttt{student.get('marks')} & 返回 None (不报错) \\ \hline
+\end{tabular}
+\end{center}
+
+\tcbline
+
+\textbf{结论：} 
+选项 B 和 D 均使用了正确的键名来提取数值。故正确答案是 \textbf{BD}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 71: 
+% ==================================================
+\item What is the output of the following dictionary operation \textbf{A}
+\begin{lstlisting}
+dict1 = {"name": "Mike", "salary": 8000}
+temp = dict1.pop("age")
+print(temp)
+\end{lstlisting}
+
+A) \texttt{KeyError: 'age'} \\
+B) \texttt{None}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 字典 \textbf{\texttt{pop()}} 方法在面对不存在的键（Key）时的行为逻辑。
+
+\begin{itemize}
+    \item \textbf{\texttt{pop(key[, default])} 的运行规则}：
+    \begin{itemize}
+        \item 如果 \texttt{key} 在字典中，则移除并返回该键对应的值。
+        \item 如果 \texttt{key} 不在字典中，且没有提供 \texttt{default}（默认值）参数，Python 将抛出错误。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+
+\begin{enumerate}
+    \item \textbf{检查字典内容}：
+    \texttt{dict1} 中仅包含两个键：\texttt{"name"} 和 \texttt{"salary"}。
+    \item \textbf{执行操作}：
+    代码尝试执行 \texttt{dict1.pop("age")}。由于 \texttt{"age"} 这个键在字典中并不存在，且开发者没有在 \texttt{pop()} 方法中提供备选的默认值（例如 \texttt{pop("age", None)}）。
+    \item \textbf{程序反应}：
+    Python 解释器无法完成删除任务，于是立即引发一个 \textbf{\texttt{KeyError}}。
+\end{enumerate}
+
+\tcbline
+
+\textbf{对比实验（避坑指南）：}
+\begin{itemize}
+    \item \textbf{情况 1（报错）}：\texttt{dict1.pop("age")} $\rightarrow$ \textbf{\texttt{KeyError}}。
+    \item \textbf{情况 2（安全）}：\texttt{dict1.pop("age", "Not Found")} $\rightarrow$ 返回 \texttt{"Not Found"}，程序继续运行。
+    \item \textbf{情况 3（get 方法）}：\texttt{dict1.get("age")} $\rightarrow$ 返回 \texttt{None}（注意：\texttt{get} 默认不报错，而 \texttt{pop} 默认报错）。
+\end{itemize}
+
+\tcbline
+
+\textbf{结论：} 
+由于题目代码未处理键不存在的情况，会导致程序崩溃并报出键错误。故正确答案是 \textbf{A}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 72: 
+% ==================================================
+\item What is the output of the following code \textbf{A}
+\begin{lstlisting}
+dict1 = {"key1":1, "key2":2}
+dict2 = {"key2":2, "key1":1}
+print(dict1 == dict2)
+\end{lstlisting}
+
+A) \texttt{True} \\
+B) \texttt{False}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中字典的 \textbf{等值比较 (Equality Comparison)} 逻辑。
+
+\begin{itemize}
+    \item \textbf{核心原则}：在 Python 中，两个字典被判定为相等 (\texttt{==})，当且仅当它们包含 \textbf{完全相同的键值对}。
+    \item \textbf{顺序无关性}：字典是基于映射（Mapping）的结构。尽管在 Python 3.7+ 中字典会保持插入顺序，但在进行 \texttt{==} 运算时，\textbf{键值对出现的先后顺序并不影响相等性的判断}。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+
+\begin{enumerate}
+    \item \textbf{检查内容}：
+    \begin{itemize}
+        \item \texttt{dict1} 包含：\texttt{'key1': 1} 和 \texttt{'key2': 2}。
+        \item \texttt{dict2} 包含：\texttt{'key1': 1} 和 \texttt{'key2': 2}。
+    \end{itemize}
+    \item \textbf{对比过程}：
+    Python 解释器会核对两个字典的长度是否一致，以及 \texttt{dict1} 中的每一个键是否都在 \texttt{dict2} 中存在且对应的值相等。
+    \item \textbf{结论}：
+    虽然两个字典在定义时的键值对顺序不同，但它们拥有的“成员”是完全一致的。
+\end{enumerate}
+
+\tcbline
+
+\textbf{对比实验：}
+\begin{itemize}
+    \item \textbf{字典对比}：\texttt{\{'a':1, 'b':2\} == \{'b':2, 'a':1\}} 结果为 \textbf{\texttt{True}}。
+    \item \textbf{列表对比}：\texttt{[1, 2] == [2, 1]} 结果为 \textbf{\texttt{False}}（列表是有序序列，顺序必须一致）。
+\end{itemize}
+
+\tcbline
+
+\textbf{结论：} 
+只要两个字典的键值对内容一致，等值比较就会返回 \texttt{True}。故正确答案是 \textbf{A}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 73: 
+% ==================================================
+\item Items are accessed by their position in a dictionary and All the keys in a dictionary must be of the same type. \textbf{B}
+
+A) True \\
+B) False \\
+\begin{lstlisting}
+# For example:
+dict1 = {"key1":1, "key2":2, 5: "test"}
+\end{lstlisting}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题包含两个关于 Python 字典的描述，这两个描述均是 \textbf{错误} 的。
+
+\begin{itemize}
+    \item \textbf{断言 1：通过位置访问 (Accessed by position)}
+    \begin{itemize}
+        \item \textbf{错误原因}：字典是 \textbf{映射类型 (Mapping)}，而不是序列类型（如列表或元组）。在字典中，数据是通过 \textbf{键 (Key)} 来检索的，而不是通过数值索引（位置）来访问。
+    \end{itemize}
+    \item \textbf{断言 2：键必须是相同类型 (Keys must be of the same type)}
+    \begin{itemize}
+        \item \textbf{错误原因}：字典的键只要是 \textbf{不可变 (Immutable)} 且 \textbf{可哈希 (Hashable)} 的即可。在同一个字典中，可以混合使用不同类型的键（例如字符串和整数）。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{实例代码分析：}
+
+\begin{lstlisting}
+dict1 = {"key1": 1, "key2": 2, 5: "test"}
+\end{lstlisting}
+\begin{itemize}
+    \item 在这个例子中，键既有字符串 (\texttt{"key1"})，也有整数 (\texttt{5})。
+    \item 访问 \texttt{"test"} 必须使用 \texttt{dict1[5]}，而不能使用位置索引（如 \texttt{dict1[2]}，除非字典里恰好有个键是 \texttt{2}）。
+\end{itemize}
+
+\tcbline
+
+\textbf{归纳总结：}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{特征} & \textbf{描述} & \textbf{结论} \\ \hline
+访问方式 & 通过“键”映射 & 并非通过位置 \\ \hline
+键的类型 & 只要可哈希即可 & 允许混合类型 \\ \hline
+值的类型 & 任何类型均可 & 允许混合类型 \\ \hline
+\end{tabular}
+\end{center}
+
+\tcbline
+
+\textbf{结论：} 
+由于题目中的两个陈述均不符合 Python 字典的特性，该命题为假。故正确答案是 \textbf{B}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 74: 
+% ==================================================
+\item Select the correct way to print Emma's age. \textbf{B}
+\begin{lstlisting}
+student = {1: {'name': 'Emma', 'age': '27', 'sex': 'Female'},
+           2: {'name': 'Mike', 'age': '22', 'sex': 'Male'}}
+\end{lstlisting}
+
+A) \texttt{student[0][1]} \\
+B) \texttt{student[1]["age"]} \\
+C) \texttt{student[0]["age"]}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是嵌套字典的访问，特别是在字典的 \textbf{键 (Key)} 为整数时的识别能力。
+
+\begin{itemize}
+    \item \textbf{关键陷阱}：在字典中，数字 \texttt{1} 是一个具体的 \textbf{键}，而不是代表“第二个位置”的索引。
+    \item \textbf{数据结构}：外层字典有两个键，分别是整数 \texttt{1} 和 \texttt{2}。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+
+\begin{enumerate}
+    \item \textbf{定位 Emma 所在的子字典}：
+    通过观察发现，Emma 的信息存储在键为 \texttt{1} 的值中。
+    \begin{itemize}
+        \item \texttt{student[1]} $\rightarrow$ \texttt{\{'name': 'Emma', 'age': '27', 'sex': 'Female'\}}
+    \end{itemize}
+    \item \textbf{定位具体的年龄}：
+    在获取到的子字典中，使用键 \texttt{"age"} 获取数值。
+    \begin{itemize}
+        \item \texttt{student[1]["age"]} $\rightarrow$ \texttt{'27'}
+    \end{itemize}
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{\texttt{student[0][1]}}：错误。字典中没有键为 \texttt{0} 的条目，且子字典中也没有键为 \texttt{1} 的条目。
+    \item[B.] \textbf{\texttt{student[1]["age"]}}：\textbf{正确}。外层通过整数键 \texttt{1} 访问，内层通过字符串键 \texttt{"age"} 访问。
+    \item[C.] \textbf{\texttt{student[0]["age"]}}：错误。虽然内层键对了，但外层键 \texttt{0} 并不存在（Python 字典不会像列表那样自动从 0 开始索引）。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+字典访问必须严格匹配定义的键名。由于 Emma 对应的键是 \texttt{1}，故正确答案是 \textbf{B}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 75: 
+% ==================================================
+\item Select all correct ways to copy a dictionary in Python: \textbf{A B}
+
+A) \texttt{dict2 = dict1.copy()} \\
+B) \texttt{dict2 = dict(dict1)} \\
+C) \texttt{dict2 = dict1}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中字典的 \textbf{拷贝 (Copying)} 机制。我们需要区分什么是“创建副本”，什么是“创建引用”。
+
+\begin{itemize}
+    \item \textbf{目标}：创建一个新的字典对象，使得对新字典的修改（在非嵌套层级）不会影响原字典。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项逻辑分析：}
+
+\begin{enumerate}
+    \item \textbf{选项 A (\texttt{dict1.copy()})}：
+    \begin{itemize}
+        \item \textbf{解析}：这是字典内置的浅拷贝方法。它会创建一个新的字典对象，并填充原字典中的内容。
+        \item \textbf{结果}：成功拷贝。
+    \end{itemize}
+    
+    \item \textbf{选项 B (\texttt{dict(dict1)})}：
+    \begin{itemize}
+        \item \textbf{解析}：使用字典构造函数 \texttt{dict()}。当你把一个现有的字典作为参数传递给它时，它会遍历该字典并创建一个包含相同键值对的新字典。
+        \item \textbf{结果}：成功拷贝。
+    \end{itemize}
+    
+    \item \textbf{选项 C (\texttt{dict2 = dict1})}：
+    \begin{itemize}
+        \item \textbf{解析}：这仅仅是 \textbf{引用赋值 (Reference Assignment)}。
+        \item \textbf{风险}：此时 \texttt{dict1} 和 \texttt{dict2} 指向内存中同一个对象。如果你修改了 \texttt{dict2}，\texttt{dict1} 也会随之改变。这不属于真正意义上的“拷贝”副本。
+    \end{itemize}
+\end{enumerate}
+
+\tcbline
+
+\textbf{引用 vs 拷贝示意：}
+
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{操作} & \textbf{是否创建新对象} & \textbf{修改副作用} \\ \hline
+\texttt{dict2 = dict1} & 否 (引用) & 修改一个，另一个也变 \\ \hline
+\texttt{dict1.copy()} & 是 (浅拷贝) & 修改顶层元素互不影响 \\ \hline
+\texttt{dict(dict1)} & 是 (浅拷贝) & 修改顶层元素互不影响 \\ \hline
+\end{tabular}
+\end{center}
+
+\tcbline
+
+\textbf{结论：} 
+只有 A 和 B 能够产生独立的新字典对象。故正确答案是 \textbf{AB}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 76: 
+% ==================================================
+\item What is the output of the following: \textbf{C}
+\begin{lstlisting}
+sampleDict = dict([
+    ('first', 1),
+    ('second', 2),
+    ('third', 3)
+])
+print(sampleDict)
+\end{lstlisting}
+
+A) \texttt{[ ('first', 100), ('second', 200), ('third', 300) ]} \\
+B) \texttt{Options: SyntaxError: invalid syntax} \\
+C) \texttt{\{'first': 1, 'second': 2, 'third': 3\}}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 字典构造函数 \textbf{\texttt{dict()}} 的一种高级用法：通过“键值对序列”来创建字典。
+
+\begin{itemize}
+    \item \textbf{构造机制}：\texttt{dict()} 可以接受一个可迭代对象（如列表），该对象内部的每个元素必须也是一个包含两个元素的可迭代对象（如元组）。
+    \item \textbf{对应关系}：内部元组的第一个元素 \texttt{'first'} 会成为 \textbf{键 (Key)}，第二个元素 \texttt{1} 会成为 \textbf{值 (Value)}。
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+
+\begin{enumerate}
+    \item \textbf{输入结构}：
+    输入是一个列表 \texttt{[...]}，里面包含了三个元组：\texttt{('first', 1)}、\texttt{('second', 2)} 和 \texttt{('third', 3)}。
+    \item \textbf{转换过程}：
+    \begin{itemize}
+        \item \texttt{('first', 1)} $\rightarrow$ \texttt{'first': 1}
+        \item \texttt{('second', 2)} $\rightarrow$ \texttt{'second': 2}
+        \item \texttt{('third', 3)} $\rightarrow$ \texttt{'third': 3}
+    \end{itemize}
+    \item \textbf{最终输出}：
+    Python 会将这些键值对包裹在大括号 \texttt{\{\}} 中，形成标准的字典格式。
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{选项分析：}
+\begin{enumerate}
+    \item[A.] \textbf{错误}：这依然是一个列表格式，且数值被无故扩大了 100 倍。
+    \item[B.] \textbf{错误}：这是完全合法的 Python 语法，不会产生 \texttt{SyntaxError}。
+    \item[C.] \textbf{\texttt{\{'first': 1, 'second': 2, 'third': 3\}}}：\textbf{正确}。这是列表转字典后的标准字面量表示形式。
+\end{enumerate}
+
+\tcbline
+
+\textbf{结论：} 
+通过 \texttt{dict()} 构造器处理双元素序列是创建字典的常用方法。故正确答案是 \textbf{C}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 77: 
+% ==================================================
+\item What is the output of the following dictionary operation: \textbf{B}
+\begin{lstlisting}
+dict1 = {"name": "Mike", "salary": 8000}
+temp = dict1.get("age")
+print(temp)
+\end{lstlisting}
+
+A) \texttt{KeyError: 'age'} \\
+B) \texttt{None} \\
+Explanation: The \texttt{get} method will not report an error
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 字典 \textbf{\texttt{get()}} 方法的容错机制。这是开发者在不确定某个键是否存在时，首选的取值方式。
+
+\begin{itemize}
+    \item \textbf{\texttt{get(key[, default])} 的运行规则}：
+    \begin{itemize}
+        \item 如果 \texttt{key} 存在于字典中，返回其对应的值。
+        \item 如果 \texttt{key} 不存在，且未指定 \texttt{default} 参数，则返回 \textbf{\texttt{None}}。
+        \item \textbf{核心特点}：无论键是否存在，该方法永远不会抛出 \texttt{KeyError} 异常。
+    \end{itemize}
+\end{itemize}
+
+\tcbline
+
+\textbf{逻辑拆解分析：}
+
+\begin{enumerate}
+    \item \textbf{检查字典内容}：
+    当前 \texttt{dict1} 只有 \texttt{"name"} 和 \texttt{"salary"} 两个键。
+    \item \textbf{执行检索}：
+    调用 \texttt{dict1.get("age")}。由于 \texttt{"age"} 不在字典中，且代码没有提供第二个参数（如 \texttt{dict1.get("age", 0)}），Python 默认返回其内置的空值对象 \texttt{None}。
+    \item \textbf{打印输出}：
+    变量 \texttt{temp} 被赋值为 \texttt{None}，因此打印结果为 \texttt{None}。
+\end{enumerate}
+
+ vs dict.get(key)]
+
+\tcbline
+
+\textbf{对比总结：}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{访问方式} & \textbf{若键 "age" 不存在} & \textbf{结果类型} \\ \hline
+\texttt{dict1["age"]} & 抛出 \texttt{KeyError} & 异常中断 \\ \hline
+\texttt{dict1.pop("age")} & 抛出 \texttt{KeyError} & 异常中断 \\ \hline
+\texttt{dict1.get("age")} & \textbf{返回 \texttt{None}} & \textbf{程序继续运行} \\ \hline
+\end{tabular}
+\end{center}
+
+\tcbline
+
+\textbf{结论：} 
+\texttt{get()} 方法的设计初衷就是为了提供一种“平稳退化”的访问机制。故正确答案是 \textbf{B}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 78: 
+% ==================================================
+\item You can use the \textbf{b} operator to determine whether a key exists in a dictionary.
+
+a. \texttt{\&} \\
+b. \texttt{in} \\
+c. \texttt{\^} \\
+d. \texttt{?}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中最常用的 \textbf{成员运算符 (Membership Operator)}。在处理字典时，我们经常需要先判断某个键是否存在，以避免程序抛出错误。
+
+\begin{itemize}
+    \item \textbf{运算符逻辑}：\texttt{key in dictionary}。
+    \item \textbf{返回值}：如果键（Key）存在于字典中，返回 \texttt{True}；否则返回 \texttt{False}。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项逻辑分析：}
+
+\begin{enumerate}
+    \item \textbf{选项 a (\texttt{\&})}：
+    这是 \textbf{按位与 (Bitwise AND)} 运算符。在 Python 中通常用于整数的位运算或集合（set）的交集运算，不能用于检查字典的键。
+    
+    \item \textbf{选项 b (\texttt{in})}：
+    \textbf{正确}。这是 Python 官方指定的成员检测运算符。它不仅适用于字典（检查键是否存在），也适用于列表、元组和字符串（检查元素是否存在）。
+    
+    \item \textbf{选项 c (\texttt{\^})}：
+    这是 \textbf{按位异或 (Bitwise XOR)} 运算符。在集合运算中表示对称差集，不具备成员检测功能。
+    
+    \item \textbf{选项 d (\texttt{?})}：
+    这是其他编程语言（如 JavaScript 或 C\#）中可能出现的“可选链”或“三元运算符”符号。在 Python 语法中，\texttt{?} 并不是合法的逻辑运算符。
+\end{enumerate}
+
+\tcbline
+
+\textbf{代码示例：}
+\begin{lstlisting}
+student = {"name": "Emma", "age": 25}
+
+# 检查键是否存在
+if "name" in student:
+    print("Key found!")  # 这行会被执行
+
+if "score" in student:
+    print("Score found!")
+else:
+    print("Key not found!") # 这行会被执行
+\end{lstlisting}
+
+\tcbline
+
+\textbf{结论：} 
+\texttt{in} 运算符是 Pythonic 风格中最直接、高效的成员检查方式。故正确答案是 \textbf{b}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 79: 
+% ==================================================
+\item You use \textbf{d} to delete an element from a dictionary.
+
+a. the \texttt{remove} method \\
+b. the \texttt{erase} method \\
+c. the \texttt{delete} method \\
+d. the \texttt{del} statement
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是在 Python 中移除字典特定键值对的标准语法。
+
+\begin{itemize}
+    \item \textbf{操作对象}：字典是映射类型，删除操作必须指定要删除的 \textbf{键 (Key)}。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项逻辑分析：}
+
+\begin{enumerate}
+    \item \textbf{选项 a (\texttt{remove} 方法)}：
+    \begin{itemize}
+        \item \textbf{解析}：\texttt{remove()} 是 \textbf{列表 (List)} 和 \textbf{集合 (Set)} 的方法，用于删除特定的元素值。
+        \item \textbf{结论}：字典对象没有 \texttt{remove()} 方法，使用它会引发 \texttt{AttributeError}。
+    \end{itemize}
+    
+    \item \textbf{选项 b (\texttt{erase} 方法)}：
+    \begin{itemize}
+        \item \textbf{解析}：\texttt{erase} 常见于 C++ 的 STL 容器中。
+        \item \textbf{结论}：在 Python 的标准内置类型（如字典、列表）中，不存在 \texttt{erase} 方法。
+    \end{itemize}
+    
+    \item \textbf{选项 c (\texttt{delete} 方法)}：
+    \begin{itemize}
+        \item \textbf{解析}：这是一个迷惑选项。虽然我们要执行“删除”操作，但 Python 并没有名为 \texttt{delete()} 的字典方法。
+    \end{itemize}
+    
+    \item \textbf{选项 d (\texttt{del} 语句)}：
+    \begin{itemize}
+        \item \textbf{解析}：\textbf{正确}。\texttt{del} 是 Python 的关键字，用于删除对对象的引用。
+        \item \textbf{用法}：\texttt{del dictionary[key]}。它可以精准地从字典中移除指定的键及其对应的值。
+    \end{itemize}
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{代码对比示例：}
+\begin{lstlisting}
+my_dict = {"a": 1, "b": 2}
+
+# 正确做法：使用 del 语句
+del my_dict["a"]  
+
+# 另一种正确做法：使用 pop() 方法（本题未列出）
+# my_dict.pop("b")
+
+print(my_dict)  # 输出 {}
+\end{lstlisting}
+
+\tcbline
+
+\textbf{结论：} 
+\texttt{del} 是 Python 中通用的删除指令，适用于字典、列表及普通变量。故正确答案是 \textbf{d}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 80: 
+% ==================================================
+\item The \textbf{b} function returns the number of elements in a dictionary:
+
+a. \texttt{size()} \\
+b. \texttt{len()} \\
+c. \texttt{elements()} \\
+d. \texttt{count()}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 的内置全局函数。在 Python 中，获取容器类对象（如字典、列表、元组、字符串等）包含的元素数量，使用的是统一的标准接口。
+
+\begin{itemize}
+    \item \textbf{功能定义}：对于字典而言，该函数返回的是字典中 \textbf{键值对 (Key-Value pairs)} 的总数。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项逻辑分析：}
+
+\begin{enumerate}
+    \item \textbf{选项 a (\texttt{size()})}：
+    \begin{itemize}
+        \item \textbf{解析}：\texttt{size()} 常见于 Java 或 C++ 的容器操作中。在 Python 中，只有部分第三方库（如 NumPy 或 Pandas）有类似属性，字典对象本身并不具备此方法。
+    \end{itemize}
+    
+    \item \textbf{选项 b (\texttt{len()})}：
+    \begin{itemize}
+        \item \textbf{解析}：\textbf{正确}。\texttt{len} 是 length 的缩写，它是 Python 的内置全局函数。
+        \item \textbf{原理}：调用 \texttt{len(d)} 时，实际上是触发了字典内部的 \texttt{\_\_len\_\_} 魔术方法。
+    \end{itemize}
+    
+    \item \textbf{选项 c (\texttt{elements()})}：
+    \begin{itemize}
+        \item \textbf{解析}：在 \texttt{collections.Counter} 对象中有一个 \texttt{elements()} 方法，但它返回的是一个迭代器，而不是数量。
+    \end{itemize}
+    
+    \item \textbf{选项 d (\texttt{count()})}：
+    \begin{itemize}
+        \item \textbf{解析}：\texttt{count()} 通常用于统计某个特定元素在列表或元组中出现的次数，并不用于返回容器的总长度。
+    \end{itemize}
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{代码示例：}
+\begin{lstlisting}
+sample_dict = {"name": "Alice", "age": 20, "city": "London"}
+
+# 使用 len() 获取长度
+print(len(sample_dict))  # 输出: 3
+\end{lstlisting}
+
+\tcbline
+
+\textbf{结论：} 
+\texttt{len()} 是 Python 中获取序列或映射长度的最通用工具。故正确答案是 \textbf{b}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 81: 
+% ==================================================
+\item You can use \textbf{a} to create an empty dictionary.
+
+a. \texttt{\{\}} \\
+b. \texttt{()} \\
+c. \texttt{[]} \\
+d. \texttt{empty()}
+
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=详细解答, enhanced, breakable]
+这道题考察的是 Python 中不同内置数据类型的 \textbf{字面量 (Literal)} 定义符。
+
+\begin{itemize}
+    \item \textbf{核心知识}：在 Python 中，大括号 \texttt{\{\}} 是字典 (Dictionary) 和集合 (Set) 的共同符号。但在处理 \textbf{空容器} 时，\texttt{\{\}} 被默认分配给字典。
+\end{itemize}
+
+\tcbline
+
+\textbf{选项符号对比：}
+
+\begin{enumerate}
+    \item \textbf{选项 a (\texttt{\{\}})}：
+    \begin{itemize}
+        \item \textbf{定义对象}：\textbf{空字典}。
+        \item \textbf{注意点}：若要创建空集合，必须使用 \texttt{set()}。
+    \end{itemize}
+    
+    \item \textbf{选项 b (\texttt{()})}：
+    \begin{itemize}
+        \item \textbf{定义对象}：\textbf{空元组 (Tuple)}。元组是不可变序列。
+    \end{itemize}
+    
+    \item \textbf{选项 c (\texttt{[]})}：
+    \begin{itemize}
+        \item \textbf{定义对象}：\textbf{空列表 (List)}。列表是可变序列。
+    \end{itemize}
+    
+    \item \textbf{选项 d (\texttt{empty()})}：
+    \begin{itemize}
+        \item \textbf{解析}：在 Python 标准库中没有名为 \texttt{empty()} 的内置函数。这可能是某些数学库（如 NumPy 的 \texttt{np.empty()}）中的函数，但与字典创建无关。
+    \end{itemize}
+\end{enumerate}
+
+
+
+\tcbline
+
+\textbf{总结表：}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{符号} & \textbf{对应数据类型} & \textbf{示例} \\ \hline
+\textbf{\{\}} & \textbf{字典 (dict)} & \texttt{\{'key': 'value'\}} \\ \hline
+\texttt{[]} & 列表 (list) & \texttt{[1, 2, 3]} \\ \hline
+\texttt{()} & 元组 (tuple) & \texttt{(1, 2, 3)} \\ \hline
+\texttt{\{1, 2\}} & 集合 (set) & \texttt{set()} (空集合写法) \\ \hline
+\end{tabular}
+\end{center}
+
+\tcbline
+
+\textbf{结论：} 
+大括号是字典的标志性符号。故正确答案是 \textbf{a}。
+\end{tcolorbox}
+
+% ==================================================
+% Question 82: 
+% ==================================================
+\item The \textbf{a} method returns the value associated with a specified key and removes that key-value pair from the dictionary.
+
+a. \texttt{pop()} \\
+b. \texttt{random()} \\
+c. \texttt{popitem()} \\
+d. \texttt{rand\_pop()}
+
+% ==================================================
+% Question 83: 
+% ==================================================
+\item The \textbf{d} dictionary method returns the value associated with a specified key. If the key is not found, it returns a default value.
+
+a. \texttt{pop()} \\
+b. \texttt{key()} \\
+c. \texttt{value()} \\
+d. \texttt{get()}
+
+% ==================================================
+% Question 84: 
+% ==================================================
+\item The \textbf{c} method returns all of a dictionary's keys and their associated values as a sequence of tuples.
+
+a. \texttt{keys\_values()} \\
+b. \texttt{values()} \\
+c. \texttt{items()} \\
+d. \texttt{get()}
+
+% ==================================================
+% Question 85: 
+% ==================================================
+\item What does NumPy stand for? \textbf{A}
+
+A. Numerical Python \\
+B. New Python \\
+C. NumPy
+
+% ==================================================
+% Question 86: 
+% ==================================================
+\item What is the primary object type in NumPy called? \textbf{A}
+
+A. Array \\
+B. List \\
+C. Dictionary
+
+% ==================================================
+% Question 87: 
+% ==================================================
+\item What NumPy function is used to create an array? \textbf{A}
+
+A. \texttt{array()} \\
+B. \texttt{create\_array()} \\
+C. \texttt{make\_array()}
+
+% ==================================================
+% Question 88: 
+% ==================================================
+\item What type of operations can be performed on NumPy arrays? \textbf{C}
+
+A. Element-wise operations \\
+B. Matrix operations \\
+C. Both A and B
+
+% ==================================================
+% Question 89: 
+% ==================================================
+\item What NumPy function is used to get the shape of an array? \textbf{A}
+
+A. \texttt{shape()} \\
+B. \texttt{get\_shape()} \\
+C. \texttt{array\_shape()}
+
+% ==================================================
+% Question 90: 
+% ==================================================
+\item What NumPy function is used to stack arrays along a new axis? \textbf{A}
+
+A. \texttt{stack()} \\
+B. \texttt{combine()} \\
+C. \texttt{join()}
+
+% ==================================================
+% Question 91: 
+% ==================================================
+\item What NumPy function is used to add two arrays element-wise? \textbf{A}
+
+A. \texttt{add()} \\
+B. \texttt{plus()} \\
+C. \texttt{sum()}
+
+% ==================================================
+% Question 92: 
+% ==================================================
+\item What NumPy function is used to multiply two arrays element-wise? \textbf{A}
+
+A. \texttt{multiply()} \\
+B. \texttt{times()} \\
+C. \texttt{product()}
+
+% ==================================================
+% Question 93: 
+% ==================================================
+\item What NumPy function is used to find the maximum value of an array? \textbf{A}
+
+A. \texttt{max()} \\
+B. \texttt{highest()} \\
+C. \texttt{maximum()}
+
+% ==================================================
+% Question 94: 
+% ==================================================
+\item What NumPy function is used to find the minimum value of an array? \textbf{A}
+
+A. \texttt{min()} \\
+B. \texttt{lowest()} \\
+C. \texttt{minimum()}
+
+% ==================================================
+% Question 95: 
+% ==================================================
+\item Which NumPy method is used to create an array from a list? \textbf{A}
+
+A) \texttt{array()} \\
+B) \texttt{fromlist()} \\
+C) \texttt{list\_to\_array()}
+
+% ==================================================
+% Question 96: 
+% ==================================================
+\item What NumPy method returns a new array with the elements along an axis? \textbf{AB}
+
+A) \texttt{sum()} \\
+B) \texttt{mean()} \\
+C) \texttt{axis()}
+
+\begin{lstlisting}
+import numpy as np
+x = np.arange(12)
+x = x.reshape((3,4))
+
+# np.mean(x, axis=1) returns [1.5, 5.5, 9.5]
+# np.sum(x, axis=1) returns [6, 22, 38]
+\end{lstlisting}
+
+% ==================================================
+% Question 97: 
+% ==================================================
+\item What NumPy method is used to stack arrays in sequence vertically? \textbf{A}
+
+A) \texttt{vstack()} \\
+B) \texttt{hstack()} \\
+C) \texttt{stack()}
+
+% ==================================================
+% Question 98: 
+% ==================================================
+\item What NumPy method returns the indices of the maximum values along an axis? \textbf{A}
+
+A) \texttt{argmax()} \\
+B) \texttt{where\_max()} \\
+C) \texttt{max\_indices()}
+
+% ==================================================
+% Question 99: 
+% ==================================================
+\item What NumPy method is used to repeat the elements of an array? \textbf{A}
+
+A) \texttt{repeat()} \\
+B) \texttt{replicate()} \\
+C) \texttt{copy()}
+
+% ==================================================
+% Question 100: 
+% ==================================================
+\item What NumPy method returns the standard deviation of the array elements? \textbf{A}
+
+A) \texttt{std()} \\
+B) \texttt{deviation()} \\
+C) \texttt{variance()}
+
+% ==================================================
+% Question 101: 
+% ==================================================
+\item What NumPy method returns a new array with one axis removed? \textbf{A}
+
+A) \texttt{squeeze()} \\
+B) \texttt{axis\_remove()} \\
+C) \texttt{flatten()}
+
+% ==================================================
+% Question 102: 
+% ==================================================
+\item What NumPy method returns the cumulative sum of the elements along an axis? \textbf{B}
+
+A) \texttt{cumprod()} \\
+B) \texttt{cumsum()} \\
+C) \texttt{cumulative()}
+
+% ==================================================
+% Question 103: 
+% ==================================================
+\item What NumPy method returns the indices that would sort an array? \textbf{B}
+
+A) \texttt{sort\_indices()} \\
+B) \texttt{argsort()} \\
+C) \texttt{index\_sort()}
+
+% ==================================================
+% Question 104: 
+% ==================================================
+\item What NumPy method returns a view of the array with the same data in memory? \textbf{A}
+
+A) \texttt{view()} \\
+B) \texttt{copy\_view()} \\
+C) \texttt{same\_memory()}
+
+% ==================================================
+% Question 105: 
+% ==================================================
+\item What does matplotlib stand for? \textbf{C}
+
+A) Matrices and Plots Library \\
+B) Markup Language Plotting Tools \\
+C) Modular Python Library for Plotting
+
+% ==================================================
+% Question 106: 
+% ==================================================
+\item What is the primary object used to create plots in matplotlib? \textbf{B}
+
+A) Figure \\
+B) Axes \\
+C) Plot
+
+% ==================================================
+% Question 107: 
+% ==================================================
+\item What function is used to create a basic plot? \textbf{A}
+
+A) \texttt{plot()} \\
+B) \texttt{plt()} \\
+C) \texttt{graph()}
+
+% ==================================================
+% Question 108: 
+% ==================================================
+\item What is the most common way to add data to a plot in matplotlib? \textbf{B}
+
+A) \texttt{add\_data()} \\
+B) \texttt{plot()} \\
+C) \texttt{scatter()}
+
+% ==================================================
+% Question 109: 
+% ==================================================
+\item What is the main class used to represent the figure area in matplotlib? \textbf{A}
+
+A) \texttt{Figure} \\
+B) \texttt{Axes} \\
+C) \texttt{Canvas}
+
+% ==================================================
+% Question 110: 
+% ==================================================
+\item What function is used to display a plot? \textbf{A}
+
+A) \texttt{show()} \\
+B) \texttt{display()} \\
+C) \texttt{render()}
+
+% ==================================================
+% Question 111: 
+% ==================================================
+\item What function is used to save a figure as an image file? \textbf{A}
+
+A) \texttt{savefig()} \\
+B) \texttt{export()} \\
+C) \texttt{save\_image()}
+
+% ==================================================
+% Question 112: 
+% ==================================================
+\item What property controls the line color in a plot? \textbf{A}
+
+A) \texttt{color} \\
+B) \texttt{c} \\
+C) \texttt{linecolor}
+
+% ==================================================
+% Question 113: 
+% ==================================================
+\item What property controls the line style in a plot? \textbf{A}
+
+A) \texttt{linestyle} \\
+B) \texttt{style} \\
+C) \texttt{line}
+
+% ==================================================
+% Question 114: 
+% ==================================================
+\item What property controls the marker in a scatter plot? \textbf{A}
+
+A) \texttt{marker} \\
+B) \texttt{mark} \\
+C) \texttt{scattermarker}
+
+% ==================================================
+% Question 115: 
+% ==================================================
+\item What function is used to add a title to a plot? \textbf{B}
+
+A) \texttt{set\_title()} \\
+B) \texttt{title()} \\
+C) \texttt{add\_title()}
+
+% ==================================================
+% Question 116: 
+% ==================================================
+\item What function is used to add axis labels? \textbf{B}
+
+A) \texttt{label()} \\
+B) \texttt{xlabel(), ylabel()} \\
+C) \texttt{axes\_labels()}
+
+% ==================================================
+% Question 117: 
+% ==================================================
+\item What function is used to add a legend? \textbf{A}
+
+A) \texttt{legend()} \\
+B) \texttt{add\_legend()} \\
+C) \texttt{key()}
+
+% ==================================================
+% Question 118: 
+% ==================================================
+\item What function is used to set the x-axis range? \textbf{A}
+
+A) \texttt{xlim()} \\
+B) \texttt{xrange()} \\
+C) \texttt{set\_xlimits()}
+
+% ==================================================
+% Question 119: 
+% ==================================================
+\item What function is used to set the y-axis range? \textbf{A}
+
+A) \texttt{ylim()} \\
+B) \texttt{yrange()} \\
+C) \texttt{set\_ylimits()}
+
+% ==================================================
+% Question 120: 
+% ==================================================
+\item What object represents the plotting area in a figure? \textbf{B}
+
+A) \texttt{Figure} \\
+B) \texttt{Axes} \\
+C) \texttt{Subplot}
+
+% ==================================================
+% Question 121: 
+% ==================================================
+\item What function is used to add text annotations to a plot? \textbf{B}
+
+A) \texttt{text()} \\
+B) \texttt{annotate()} \\
+C) \texttt{label()}
+
+% ==================================================
+% Question 122: 
+% ==================================================
+\item What object is used to customize the font properties in a plot? \textbf{A}
+
+A) \texttt{FontProperties} \\
+B) \texttt{Font} \\
+C) \texttt{TextProperties}
+
+% ==================================================
+% Question 123: 
+% ==================================================
+\item What function is used to create subplots in a grid layout? \textbf{B}
+
+A) \texttt{subplot()} \\
+B) \texttt{subplots()} \\
+C) \texttt{gridplot()}
+
+% ==================================================
+% Question 124: 
+% ==================================================
+\item What object is used to customize the figure size and resolution? \textbf{A}
+
+A) \texttt{Figure} \\
+B) \texttt{FigureSize} \\
+C) \texttt{FigureCanvas}
+
+% ==================================================
+% Question 125: 
+% ==================================================
+\item What is the primary data structure in pandas for storing tabular data? \textbf{B}
+
+A) \texttt{Series} \\
+B) \texttt{DataFrame} \\
+C) \texttt{Array}
+
+% ==================================================
+% Question 126: 
+% ==================================================
+\item Which pandas method is used to read a CSV file into a DataFrame? \textbf{A}
+
+A) \texttt{read\_csv()} \\
+B) \texttt{load\_csv()} \\
+C) \texttt{import\_csv()}
+
+% ==================================================
+% Question 127: 
+% ==================================================
+\item How do you select a single column from a DataFrame in pandas? \textbf{B}
+
+A) \texttt{df.select\_column('column\_name')} \\
+B) \texttt{df['column\_name']} \\
+C) \texttt{df.get\_column('column\_name')}
+
+% ==================================================
+% Question 128: 
+% ==================================================
+\item What pandas method is used to calculate the mean of a column in a DataFrame? \textbf{A}
+
+A) \texttt{mean()} \\
+B) \texttt{average()} \\
+C) \texttt{calculate\_mean()}
+
+% ==================================================
+% Question 129: 
+% ==================================================
+\item How do you drop a column from a DataFrame in pandas? \textbf{C}
+
+A) \texttt{df.drop\_column('column\_name')} \\
+B) \texttt{df.remove\_column('column\_name')} \\
+C) \texttt{df.drop('column\_name', axis=1)}
+
+% ==================================================
+% Question 130: 
+% ==================================================
+\item What pandas method is used to fill missing values in a DataFrame? \textbf{C}
+
+A) \texttt{fill\_missing()} \\
+B) \texttt{fill\_nan()} \\
+C) \texttt{fillna()}
+
+% ==================================================
+% Question 131: 
+% ==================================================
+\item How do you sort a DataFrame by a specific column in pandas? \textbf{B}
+
+A) \texttt{df.sort('column\_name')} \\
+B) \texttt{df.sort\_values('column\_name')} \\
+C) \texttt{df.order\_by('column\_name')}
+
+% ==================================================
+% Question 132: 
+% ==================================================
+\item What pandas method is used to group data in a DataFrame? \textbf{C}
+
+A) \texttt{group\_by()} \\
+B) \texttt{group()} \\
+C) \texttt{groupby()}
+
+% ==================================================
+% Question 133: 
+% ==================================================
+\item How do you rename a column in a DataFrame in pandas? \textbf{B}
+
+A) \texttt{df.rename\_column('old\_name', 'new\_name')} \\
+B) \texttt{df.rename(columns=\{'old\_name': 'new\_name'\})} \\
+C) \texttt{df.rename('old\_name', 'new\_name')}
+
+% ==================================================
+% Question 134: 
+% ==================================================
+\item What pandas method is used to save a DataFrame to a CSV file? \textbf{C}
+
+A) \texttt{save\_csv()} \\
+B) \texttt{write\_csv()} \\
+C) \texttt{to\_csv()}
+
+% ==================================================
+% Question 135: 
+% ==================================================
+\item How do you select multiple columns from a DataFrame in pandas? \textbf{B}
+
+A) \texttt{df.select\_columns(['col1', 'col2'])} \\
+B) \texttt{df[['col1', 'col2']]} \\
+C) \texttt{df.get\_columns(['col1', 'col2'])}
+
+% ==================================================
+% Question 136: 
+% ==================================================
+\item What pandas method is used to calculate the median of a column in a DataFrame? \textbf{A}
+
+A) \texttt{median()} \\
+B) \texttt{middle()} \\
+C) \texttt{calculate\_median()}
+
+% ==================================================
+% Question 137: 
+% ==================================================
+\item How do you filter rows in a DataFrame based on a condition in pandas? \textbf{B}
+
+A) \texttt{df.filter(condition)} \\
+B) \texttt{df[condition]} \\
+C) \texttt{df.apply(condition)}
+
+% ==================================================
+% Question 138: 
+% ==================================================
+\item What pandas method is used to drop rows with missing values in a DataFrame? \textbf{C}
+
+A) \texttt{drop\_missing()} \\
+B) \texttt{remove\_nan()} \\
+C) \texttt{dropna()}
+
+% ==================================================
+% Question 139: 
+% ==================================================
+\item How do you reset the index of a DataFrame in pandas? \textbf{A}
+
+A) \texttt{df.reset\_index()} \\
+B) \texttt{df.set\_index()} \\
+C) \texttt{df.reindex()}
+
+% ==================================================
+% Question 140: 
+% ==================================================
+\item What pandas method is used to merge two DataFrames based on a common column? \textbf{B}
+
+A) join() \\
+B) merge() \\
+C) combine()
+
+% ==================================================
+% Question 141: 
+% ==================================================
+\item How do you calculate the sum of a column in a DataFrame in pandas? \textbf{C}
+
+A) df.sum('column\_name') \\
+B) df.calculate\_sum('column\_name') \\
+C) df['column\_name'].sum()
+
+% ==================================================
+% Question 142: 
+% ==================================================
+\item What pandas method is used to calculate descriptive statistics of a DataFrame? \textbf{A}
+
+A) describe() \\
+B) summary() \\
+C) stats()
+
+% ==================================================
+% Question 143: 
+% ==================================================
+\item How do you drop duplicate rows from a DataFrame in pandas?
+
+A) df.drop\_duplicates() \\
+B) df.remove\_duplicates() \\
+C) df.drop\_duplicates(inplace=True)
+
+% ==================================================
+% Question 144: 
+% ==================================================
+\item What pandas method is used to pivot a DataFrame based on column values? \textbf{A}
+
+A) pivot\_table() \\
+B) pivot() \\
+C) reshape()
+
+% ==================================================
+% Question 145: 
+% ==================================================
+\item Create a 1D NumPy array with values from 0 to 9.
+\begin{lstlisting}
+arr1d = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+# or
+arr1d = np.arange(10)
+# or
+arr1d = np.linspace(0, 9, 10)
+\end{lstlisting}
+
+% ==================================================
+% Question 146: 
+% ==================================================
+\item Create a 2D NumPy array with shape (3, 3) filled with zeros.
+\begin{lstlisting}
+arr2d = np.zeros((3, 3))
+\end{lstlisting}
+
+% ==================================================
+% Question 147: 
+% ==================================================
+\item Create a 3x3 identity matrix using NumPy.
+\begin{lstlisting}
+identity_matrix = np.eye(3)
+\end{lstlisting}
+
+% ==================================================
+% Question 148: 
+% ==================================================
+\item Create a 1D NumPy array with 10 random integers between 1 and 100.
+\begin{lstlisting}
+random_integers = np.random.randint(1, 100, 10)
+\end{lstlisting}
+
+% ==================================================
+% Question 149: 
+% ==================================================
+\item Reshape the array from exercise above into a 2D array with shape (2, 5).
+\begin{lstlisting}
+reshaped_array = random_integers.reshape(2, 5)
+\end{lstlisting}
+
+% ==================================================
+% Question 150: 
+% ==================================================
+\item Multiply each element in the array from exercise above by 2.
+\begin{lstlisting}
+multiplied_array = reshaped_array * 2
+\end{lstlisting}
+
+% ==================================================
+% Question 151: 
+% ==================================================
+\item Calculate the mean of the array from exercise above.
+\begin{lstlisting}
+mean_value = multiplied_array.mean()
+\end{lstlisting}
+
+% ==================================================
+% Question 152: 
+% ==================================================
+\item Find the maximum value in the array from exercise 150.
+\begin{lstlisting}
+max_value = multiplied_array.max()
+\end{lstlisting}
+
+% ==================================================
+% Question 153: 
+% ==================================================
+\item Create a 2D NumPy array with shape (4, 4) filled with random floats between 0 and 1.
+\begin{lstlisting}
+random_floats = np.random.random((4, 4))
+\end{lstlisting}
+
+% ==================================================
+% Question 154: 
+% ==================================================
+\item Transpose the array from exercise above.
+\begin{lstlisting}
+transposed_array = random_floats.T
+\end{lstlisting}
+
+% ==================================================
+% Question 155: 
+% ==================================================
+\item Create a 1D NumPy array with 5 evenly spaced values between 0 and 10.
+\begin{lstlisting}
+evenly_spaced_array = np.linspace(0, 10, 5)
+\end{lstlisting}
+
+% ==================================================
+% Question 156: 
+% ==================================================
+\item Extract all odd numbers from the array from exercise above.
+\begin{lstlisting}
+odd_numbers = evenly_spaced_array[evenly_spaced_array % 2 != 0]
+\end{lstlisting}
+
+% ==================================================
+% Question 157: 
+% ==================================================
+\item Create a 2D NumPy array with shape (3, 3) filled with ones.
+\begin{lstlisting}
+ones_array = np.ones((3, 3))
+\end{lstlisting}
+
+% ==================================================
+% Question 158: 
+% ==================================================
+\item Add the array from exercise above to the identity matrix from exercise 147.
+\begin{lstlisting}
+added_array = ones_array + identity_matrix
+\end{lstlisting}
+
+% ==================================================
+% Question 159: 
+% ==================================================
+\item Multiply the array from exercise above by the array from exercise 146.
+\begin{lstlisting}
+multiplied_array = np.dot(added_array, arr2d)
+\end{lstlisting}
+
+% ==================================================
+% Question 160: 
+% ==================================================
+\item Calculate the sum of each column in the array from exercise 159.
+\begin{lstlisting}
+column_sums = multiplied_array.sum(axis=0)
+\end{lstlisting}
+
+% ==================================================
+% Question 161: 
+% ==================================================
+\item Calculate the dot product of the arrays from exercise 146 and exercise 147.
+\begin{lstlisting}
+dot_product = np.dot(arr2d, identity_matrix)
+\end{lstlisting}
+
+% ==================================================
+% Question 162: 
+% ==================================================
+\item Find the indices of the non-zero elements in the array from exercise 1.
+\begin{lstlisting}
+nonzero_indices = np.nonzero(arr1d)
+\end{lstlisting}
+
+% ==================================================
+% Question 163: 
+% ==================================================
+\item Sort the array from exercise 148 in ascending order.
+\begin{lstlisting}
+sorted_array = np.sort(random_integers)
+\end{lstlisting}
+
+% ==================================================
+% Question 164: 
+% ==================================================
+\item Calculate the square root of each element in the array from exercise above.
+\begin{lstlisting}
+sqrt_array = np.sqrt(sorted_array)
+\end{lstlisting}
+
+% ==================================================
+% Question 165: 
+% ==================================================
+\item Create a pandas Series from a list of integers [1, 2, 3, 4, 5].
+\begin{lstlisting}
+series = pd.Series([1, 2, 3, 4, 5])
+\end{lstlisting}
+
+% ==================================================
+% Question 166: 
+% ==================================================
+\item Create a pandas DataFrame from a dictionary with keys 'Name', 'Age', and 'City'.
+\begin{lstlisting}
+data = {'Name': ['John', 'Jane', 'Mike'],
+        'Age': [25, 30, 35],
+        'City': ['New York', 'London', 'Paris']}
+df = pd.DataFrame(data)
+\end{lstlisting}
+
+% ==================================================
+% Question 167: 
+% ==================================================
+\item Read a CSV file named 'data.csv' into a pandas DataFrame.
+\begin{lstlisting}
+df = pd.read_csv('data.csv')
+\end{lstlisting}
+
+% ==================================================
+% Question 168: 
+% ==================================================
+\item Display the first 5 rows of the DataFrame from exercise 167.
+\begin{lstlisting}
+df.head(5)
+\end{lstlisting}
+
+% ==================================================
+% Question 169: 
+% ==================================================
+\item Display the last 3 rows of the DataFrame from exercise 167.
+\begin{lstlisting}
+df.tail(3)
+\end{lstlisting}
+
+% ==================================================
+% Question 170: 
+% ==================================================
+\item Display the column names of the DataFrame from exercise 167.
+\begin{lstlisting}
+df.columns
+\end{lstlisting}
+
+% ==================================================
+% Question 171: 
+% ==================================================
+\item Select the 'Age' column from the DataFrame from exercise 167.
+\begin{lstlisting}
+df['Age']
+\end{lstlisting}
+
+% ==================================================
+% Question 172: 
+% ==================================================
+\item Select the row at index 2 from the DataFrame from exercise 167.
+\begin{lstlisting}
+df.loc[2]
+\end{lstlisting}
+
+% ==================================================
+% Question 173: 
+% ==================================================
+\item Select rows 3 to 7 from the DataFrame from exercise 167.
+\begin{lstlisting}
+df.loc[3:7]
+\end{lstlisting}
+
+% ==================================================
+% Question 174: 
+% ==================================================
+\item Add a new column 'Gender' to the DataFrame from exercise 167 with values ['M', 'F', 'M', 'F', 'M'].
+\begin{lstlisting}
+df['Gender'] = ['M', 'F', 'M', 'F', 'M']
+\end{lstlisting}
+
+% ==================================================
+% Question 175: 
+% ==================================================
+\item Calculate the mean of the 'Age' column in the DataFrame from exercise 167.
+\begin{lstlisting}
+df['Age'].mean()
+\end{lstlisting}
+
+% ==================================================
+% Question 176: 
+% ==================================================
+\item Calculate the maximum value in the 'Age' column in the DataFrame from exercise 167.
+\begin{lstlisting}
+df['Age'].max()
+\end{lstlisting}
+
+% ==================================================
+% Question 177: 
+% ==================================================
+\item Sort the DataFrame from exercise 167 by the 'Age' column in ascending order.
+\begin{lstlisting}
+df.sort_values('Age')
+\end{lstlisting}
+
+% ==================================================
+% Question 178: 
+% ==================================================
+\item Filter the DataFrame from exercise 167 to only include rows where 'Age' is greater than 30.
+\begin{lstlisting}
+df[df['Age'] > 30]
+\end{lstlisting}
+
+% ==================================================
+% Question 179: 
+% ==================================================
+\item Group the DataFrame from exercise 167 by the 'City' column and calculate the mean age for each city.
+\begin{lstlisting}
+df.groupby('City')['Age'].mean()
+\end{lstlisting}
+
+% ==================================================
+% Question 180: 
+% ==================================================
+\item Rename the column 'Age' to 'Years' in the DataFrame from exercise 167.
+\begin{lstlisting}
+df.rename(columns={'Age': 'Years'}, inplace=True)
+\end{lstlisting}
+
+% ==================================================
+% Question 181: 
+% ==================================================
+\item Drop the 'City' column from the DataFrame from exercise 167.
+\begin{lstlisting}
+df.drop('City', axis=1, inplace=True)
+\end{lstlisting}
+
+% ==================================================
+% Question 182: 
+% ==================================================
+\item Save the modified DataFrame from exercise 181 to a new CSV file named 'modified\_data.csv'.
+\begin{lstlisting}
+df.to_csv('modified_data.csv', index=False)
+\end{lstlisting}
+
+% ==================================================
+% Question 183: 回看一下
+% ==================================================
+\item Merge two DataFrames, df1 and df2, on a common column 'ID'.
+\begin{lstlisting}
+merged_df = pd.merge(df1, df2, on='ID')
+\end{lstlisting}
+
+% ==================================================
+% Question 184: 
+% ==================================================
+\item Perform an inner join between two DataFrames, df1 and df2, on a common column 'ID'.
+\begin{lstlisting}
+inner_join_df = pd.merge(df1, df2, on='ID', how='inner')
+\end{lstlisting}
+\end{enumerate}
+
+\end{document}
